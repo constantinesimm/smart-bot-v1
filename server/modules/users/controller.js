@@ -4,15 +4,19 @@ const { HttpError } = require('../../middleware');
 const passport = require('passport');
 
 router.post('/login', (req, res, next) => {
-	passport.authenticate('local', { session: false },(err, user, info) => {
-		if (err) return next(new HttpError(err));
+	passport.authenticate('local', { session: false },(error, user, info) => {
+		if (error) return next(new HttpError(error));
 		
 		if (!user) return next(new HttpError(info.status, info.msg));
 		
-		req.logIn(user, (err) => {
-			if (err) return next(new HttpError(err))
+		req.logIn(user, (error) => {
+			if (error) return next(new HttpError(error))
 			
-			return res.json({ user: user.data, token: user.token, message: user.message })
+			res.set({
+				'Content-Type': 'application/json; charset=utf-8',
+				'Authorization': user.accessData.token
+			})
+			return res.json(user)
 		})
 	})(req, res, next);
 });
@@ -32,6 +36,7 @@ router.post('/register/invite', (req, res, next) => {
 });
 
 router.post('/register/complete', (req, res, next) => {
+	console.log(req.body)
 	authService
 		.registerComplete(req.body)
 		.then(response => res.json({ message: response }))

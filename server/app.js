@@ -48,10 +48,9 @@ app
 	.use(express.static(path.join(__dirname, 'public')))
 	.get('*', (req, res) => res.sendFile('index.html', { root: 'dist'}));
 
-
 setPassport(passport);
 /**
- * App router
+ * App router and passport.js
  */
 setRouter(app);
 

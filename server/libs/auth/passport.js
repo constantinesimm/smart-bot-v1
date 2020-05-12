@@ -12,28 +12,44 @@ const setPassport = passport => {
 			.then(user => {
 				if (!user) return done(null, false, { status: 404, msg: 'Пользователь не найден или несуществует'});
 				if (!user.serviceData.isVerified) return done(null, false, { status: 403, msg: 'Аккаунт не подтверждён. Нужно завершить регистрацию!' });
-				if (!authHelper.compareSecretWithHash(username, user.accessData.hash)) return done(null, false, { status: 401, msg: 'Не правильный логин или пароль' });
+				if (!authHelper.compareSecretWithHash(password, user.accessData.hash)) return done(null, false, { status: 401, msg: 'Не правильный логин или пароль' });
 				
-				const authToken = authHelper.createAuthToken(user._id);
-				user.accessData.hash = authToken;
+				user.accessData.token = authHelper.createAuthToken(user._id);
 				
 				user
 					.save()
 					.then(() => {
-						delete user.serviceData;
-						delete user.accessData;
+						let formatUser = {
+							userId: user.userId,
+							email: user.email,
+							info: {
+								firstName: user.info.firstName,
+								lastName: user.info.lastName,
+								gender: user.info.gender,
+								phoneNumber: user.info.phoneNumber
+							},
+							serviceData: {
+								role: user.serviceData.role
+							},
+							accessData: {
+								token: user.accessData.token
+							}
+						}
 						
-						return done(null, { data: user, token: authToken });
+						return done(null, formatUser);
 					});
 			})
-			.catch(err => new HttpError(err))
+			.catch(error => done(new HttpError(error)))
 	}));
 	
-	passport.serializeUser((user, done) => done(null, user._id));
+	passport.serializeUser((user, done) => done(null, user));
 	passport.deserializeUser((id, done) => {
 		dbService
 			.findOneById(id)
-			.then(user => done(null, user))
+			.then(user => {
+				console.log('deserialize user', user)
+				done(null, user)
+			})
 			.catch(error => new HttpError(error));
 	})
 };

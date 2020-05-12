@@ -1,6 +1,7 @@
 const AdminUser = require('../model');
 const { transporter, options } = require('../../../libs/mailer/mailer');
-const { dbService, authHelper } = require('./');
+const dbService = require('./db');
+const authHelper = require('./helpers');
 
 
 module.exports.authenticateUser = data => new Promise((resolve, reject) => {
@@ -28,7 +29,7 @@ module.exports.authenticateUser = data => new Promise((resolve, reject) => {
 		.catch(error => reject(error));
 });
 
-module.exports.registerInvite = (userEmail, userRole, newUserId) => new Promise(((resolve, reject) => {
+module.exports.registerInvite = (userEmail, userRole, newUserId) => new Promise((resolve, reject) => {
 	//create new userId value
 	dbService
 		.getNewUserId()
@@ -65,14 +66,13 @@ module.exports.registerInvite = (userEmail, userRole, newUserId) => new Promise(
 			
 		})
 		.catch(error => reject(error))
-}));
+});
 
-module.exports.registerComplete = data => new Promise(((resolve, reject) => {
-	
+module.exports.registerComplete = data => new Promise((resolve, reject) => {
 	dbService
 		.findOneByEmail(data.email)
 		.then(user => {
-			if (!user) reject({ status: 404, msg: 'Пользователь с таким email не найден' });
+			if (!user) return reject({ status: 404, msg: 'Пользователь с таким email не найден' });
 			
 			const hashedPassword = authHelper.generateSecretHash(data.secret);
 			
@@ -93,7 +93,6 @@ module.exports.registerComplete = data => new Promise(((resolve, reject) => {
 			
 			user.save()
 				.then(() => {
-					console.log('update.user save then')
 					transporter.sendMail(options(data.email, 'registerComplete', data.firstName, null))
 					
 					return resolve('Аккаунт успешно активирован');
@@ -103,8 +102,9 @@ module.exports.registerComplete = data => new Promise(((resolve, reject) => {
 			
 		})
 		.catch(error => reject(error));
-}));
+});
 
+/*
 module.exports.passwordRecoveryRequest = userEmail => new Promise((resolve, reject) => {
 
 });
@@ -116,3 +116,4 @@ module.exports.passwordRecoveryComplete = userEmail => new Promise((resolve, rej
 module.exports.removeUserAccount = userEmail => new Promise((resolve, reject) => {
 
 });
+ */

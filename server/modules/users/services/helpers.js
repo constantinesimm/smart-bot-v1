@@ -15,10 +15,6 @@ module.exports = {
 		return bcrypt.hashSync(secret, 10);
 	},
 	compareSecretWithHash(secret, hash) {
-		return bcrypt.compare(secret, hash, function (err, result) {
-			console.log('pass compare err',err)
-			console.log('pass compare err',result)
-			return result;
-		})
+		return bcrypt.compareSync(secret, hash);
 	}
 };

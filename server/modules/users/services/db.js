@@ -1,7 +1,14 @@
-const AdminUsers = require('../model');
+const AdminUser = require('../model');
+
+module.exports.findOneById = userId => new Promise((resolve, reject) => {
+	AdminUser
+		.findById(userId)
+		.then(result => resolve(result))
+		.catch(error => reject(error));
+});
 
 module.exports.findOneByEmail = userEmail => new Promise(((resolve, reject) => {
-	AdminUsers
+	AdminUser
 		.findOne({ email: userEmail })
 		.then(result => resolve(result))
 		.catch(error => reject(error));
@@ -9,17 +16,14 @@ module.exports.findOneByEmail = userEmail => new Promise(((resolve, reject) => {
 
 module.exports.findOneByServiceToken = serviceToken => new Promise((resolve, reject) => {
 	console.log('findOneByServiceToken', serviceToken)
-	AdminUsers
+	AdminUser
 		.findOne({ 'serviceData.token': serviceToken })
-		.then(result => {
-			console.log('servicetoken',result)
-			resolve(result);
-		})
+		.then(result => resolve(result))
 		.catch(error => reject(error));
 });
 
 module.exports.getNewUserId = () => new Promise(((resolve, reject) => {
-	AdminUsers
+	AdminUser
 		.find({}, { _id: 0, userId: 1 })
 		.sort({ userId: -1 })
 		.limit(1)

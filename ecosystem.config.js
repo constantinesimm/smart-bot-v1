@@ -3,7 +3,6 @@ module.exports = {
       {
         script: './server/bin/www',
         exec_mode: 'cluster',
-        watch: '.',
         instances : 'max'
       },
       /*

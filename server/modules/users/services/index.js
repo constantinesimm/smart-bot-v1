@@ -1,9 +1,9 @@
 const authService = require('./auth');
 const dbService = require('./db');
-const helpers = require('./helpers');
+const authHelper = require('./helpers');
 
 module.exports = {
 	authService,
 	dbService,
-	helpers
+	authHelper
 }

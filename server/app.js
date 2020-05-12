@@ -1,11 +1,14 @@
 const cors = require('cors');
 const path = require('path');
+const helmet = require('helmet');
 const logger = require('morgan');
 const express = require('express');
 const database = require('./libs/db/mongo/mongoose');
+const passport = require('passport');
 const bodyParser = require('body-parser');
 const { HttpError } = require('./middleware');
 const setRouter = require('./controllers');
+const setPassport = require('./libs/auth/passport');
 
 const app = express();
 
@@ -19,6 +22,16 @@ if (process.env.NODE_ENV !== ' production') {
 		.use(cors( { origin: 'http://localhost:8080' }))
 		.use(logger('dev'));
 }
+
+/**
+ *  App secure middleware
+ */
+app
+	.use(helmet.hidePoweredBy({ setTo: 'PHP 4.2.0' }))
+	.use(helmet.xssFilter())
+	.use(helmet.noSniff())
+	.use(passport.initialize())
+	.use(passport.session());
 
 /**
  * Request body parser middleware
@@ -36,6 +49,7 @@ app
 	.get('*', (req, res) => res.sendFile('index.html', { root: 'dist'}));
 
 
+setPassport(passport);
 /**
  * App router
  */

@@ -1,8 +1,27 @@
-const { dbService, authHelper } = require('../../modules/users/services');
-const { HttpError } = require('../../middleware');
 const LocalStrategy = require('passport-local').Strategy;
+const HttpError = require('../http-error');
+const { dbService, authHelper } = require('../../modules/users/services');
 
-const setPassport = passport => {
+const publicUserObj = user => {
+	return {
+		userId: user.userId,
+		email: user.email,
+		info: {
+			firstName: user.info.firstName,
+			lastName: user.info.lastName,
+			gender: user.info.gender,
+			phoneNumber: user.info.phoneNumber
+		},
+		serviceData: {
+			role: user.serviceData.role
+		},
+		accessData: {
+			token: user.accessData.token
+		}
+	}
+};
+
+module.exports = passport => {
 	passport.use(new LocalStrategy({
 		usernameField: 'email',
 		passwordField: 'secret'
@@ -10,7 +29,7 @@ const setPassport = passport => {
 		dbService
 			.findOneByEmail(username)
 			.then(user => {
-				if (!user) return done(null, false, { status: 404, msg: 'Пользователь не найден или несуществует'});
+				if (!user) return done(null, false, { status: 404, msg: 'Пользователь не найден или не существует'});
 				if (!user.serviceData.isVerified) return done(null, false, { status: 403, msg: 'Аккаунт не подтверждён. Нужно завершить регистрацию!' });
 				if (!authHelper.compareSecretWithHash(password, user.accessData.hash)) return done(null, false, { status: 401, msg: 'Не правильный логин или пароль' });
 				
@@ -18,26 +37,8 @@ const setPassport = passport => {
 				
 				user
 					.save()
-					.then(() => {
-						let formatUser = {
-							userId: user.userId,
-							email: user.email,
-							info: {
-								firstName: user.info.firstName,
-								lastName: user.info.lastName,
-								gender: user.info.gender,
-								phoneNumber: user.info.phoneNumber
-							},
-							serviceData: {
-								role: user.serviceData.role
-							},
-							accessData: {
-								token: user.accessData.token
-							}
-						}
-						
-						return done(null, formatUser);
-					});
+					.then(() => done(null, publicUserObj(user)));
+				
 			})
 			.catch(error => done(new HttpError(error)))
 	}));
@@ -46,12 +47,7 @@ const setPassport = passport => {
 	passport.deserializeUser((id, done) => {
 		dbService
 			.findOneById(id)
-			.then(user => {
-				console.log('deserialize user', user)
-				done(null, user)
-			})
+			.then(user => done(null, user))
 			.catch(error => new HttpError(error));
 	})
 };
-
-module.exports = setPassport;

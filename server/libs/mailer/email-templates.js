@@ -12,7 +12,7 @@ const subjectTemplate = template => {
 	return subject[template];
 };
 
-const emailTemplate = (template, name, token) => {
+const letterTemplate = (template, name, token) => {
 	const host = process.env.NODE_ENV === 'production' ? `${ appHost }` : 'http://localhost:8080';
 	const usersLoginPage = `${ host }/users/login`;
 	
@@ -37,5 +37,5 @@ const emailTemplate = (template, name, token) => {
 
 module.exports = {
 	subjectTemplate,
-	emailTemplate
+	letterTemplate
 };

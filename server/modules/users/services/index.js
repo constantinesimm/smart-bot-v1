@@ -1,9 +1,9 @@
-const authService = require('./auth');
-const dbService = require('./db');
-const helpers = require('./helpers');
+const authService = require('./authentication');
+const authHelper = require('./helpers');
+const dbService = require('./database');
 
 module.exports = {
 	authService,
-	dbService,
-	helpers
-}
+	authHelper,
+	dbService
+};

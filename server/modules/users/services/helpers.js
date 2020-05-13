@@ -13,5 +13,8 @@ module.exports = {
 	},
 	generateSecretHash(secret) {
 		return bcrypt.hashSync(secret, 10);
+	},
+	compareSecretWithHash(secret, hash) {
+		return bcrypt.compareSync(secret, hash);
 	}
 };

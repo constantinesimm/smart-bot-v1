@@ -26,10 +26,7 @@ const UserSchema = new Schema({
 			type: Boolean,
 			default: false
 		},
-		accessExpires: {
-			type: Date,
-			default: Date.now() + 1000 * 60 * 60 * 24
-		},
+		accessExpires: Date,
 		role: {
 			type: String,
 			default: 'manager',

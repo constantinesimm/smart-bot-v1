@@ -1,18 +1,16 @@
 const passport = require('passport');
 const router = require('express').Router();
 const HttpError = require('../../libs/http-error');
-const { authService } = require('./services');
+const UserService = require('./service');
 
 router.post('/authenticate', (req, res, next) => {
 	passport.authenticate('local', { session: false },(error, user, info) => {
 		if (error) return next(new HttpError(error));
-		
 		if (!user) return next(new HttpError(info.status, info.msg));
 		
 		req.logIn(user, (error) => {
 			if (error) return next(new HttpError(error));
 			
-			res.setHeader('Authorization', `Bearer ${ user.accessData.token }`);
 			return res.json(user);
 		})
 	})(req, res, next);
@@ -20,40 +18,53 @@ router.post('/authenticate', (req, res, next) => {
 
 router.post('/register/:action', (req, res, next) => {
 	if (req.params.action === 'invite') {
-		return authService
-			.registerInvite(req.body.email, req.body.role)
-			.then(response => res.json({ message: response }))
-			.catch(error => next(new HttpError(error.status, error.msg)));
+		
+		UserService.registerRequest(req.body)
+			.then(data => res.json(data))
+			.catch(error => next(new HttpError(error.status, error.message)));
 		
 	} else if (req.params.action === 'complete') {
-		return authService
-			.registerComplete(req.body)
-			.then(response => res.json({ message: response }))
-			.catch(error => next(new HttpError(error.status, error.msg)));
 		
-	} else next(new HttpError(404, `Not Found ${ req.path }`));
+		UserService.registerComplete(req.body)
+			.then(data => res.json(data))
+			.catch(error => next(new HttpError(error.status, error.message)));
+		
+	} else next(new HttpError(404, 'Not Found'));
 });
 
 router.post('/password/restore/:action', (req, res, next) => {
 	if (req.params.action === 'request') {
-		return authService
-			.passwordRestoreRequest(req.body.email)
+		
+		UserService.passwordRestoreRequest(req.body.email)
 			.then(response => res.json({ message: response }))
-			.catch(error => next(new HttpError(error.status, error.msg)));
+			.catch(error => next(new HttpError(error.status, error.message)));
 		
 	} else if (req.params.action === 'complete') {
-		return authService
-			.passwordRestoreComplete(req.body)
-			.then(response => res.json({ message: response }))
-			.catch(error => next(new HttpError(error.status, error.msg)));
 		
-	} else next(new HttpError(404, `Not Found ${ req.path }`));
+		UserService.passwordRestoreComplete(req.body)
+			.then(response => res.json({ message: response }))
+			.catch(error => next(new HttpError(error.status, error.message)));
+		
+	} else next(new HttpError(404, 'Not Found'));
 });
 
 router.post('/employee/remove', (req, res, next) => {
-	authService
-		.removeUserAccount(req.body.email)
+	
+	UserService.removeEmployerAccount(req.body.email)
 		.then(response => res.json({ message: response }))
-		.catch(error => next(new HttpError(error.status, error.msg)));
+		.catch(error => next(new HttpError(error.status, error.message)));
 });
+
+router.post('/check/serviceToken', (req, res, next) => {
+	UserService.verifyToken('service', req.body.serviceToken)
+		.then(response => res.json({ user: UserService.publicUser(response)}))
+		.catch(error => next(new HttpError(error.status, error.message)));
+});
+
+router.post('/logout', (req, res, next) => {
+	UserService.signOutRequest(req.body.userId)
+		.then(response => res.json(response))
+		.catch(error => next(new HttpError(error.status, error.message)));
+});
+
 module.exports = router;

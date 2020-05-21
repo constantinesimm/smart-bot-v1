@@ -1,7 +1,13 @@
-if (process.env.NODE_ENV === 'dev') require('dotenv').config({ path: require('path').join(__dirname + '/../../.env') });
+const path = require('path');
+const dotenv = require('dotenv');
+
+dotenv.config({
+	path: path.join(__dirname + '/../../.env')
+});
 
 module.exports = {
 	secretString: process.env.CONTROL_STRING,
+	sessionSecretString: process.env.SESSION_CONTROL_STRING,
 	appHost: process.env.APP_HOST,
 	database: {
 		mongo: {
@@ -11,7 +17,8 @@ module.exports = {
 			},
 			options: {
 				useUnifiedTopology: true,
-				useNewUrlParser: true
+				useNewUrlParser: true,
+				useFindAndModify: false
 			}
 		}
 	},

@@ -20,31 +20,27 @@ connectMongoDB();
 const app = express();
 
 /* NODE_ENV=dev middleware */
-if (process.env.NODE_ENV === 'dev') {
-	app
-		.use(cors( { origin: 'http://localhost:8080' }))
-		.use(logger('dev'));
+if (process.env.NODE_ENV !== 'production') {
+	app.use(cors( { origin: 'http://localhost:8080' }))
+	app.use(logger('dev'));
 }
 
 /* Secure middleware */
 app
 	.use(helmet.hidePoweredBy({ setTo: 'PHP 4.2.0' }))
 	.use(helmet.xssFilter())
-	.use(helmet.noSniff())
-	.use(passport.initialize());
+	.use(helmet.noSniff());
 
 /* Request body parser middleware */
 app
 	.use(bodyParser.json())
 	.use(bodyParser.urlencoded({ extended: false }));
 
-/* Static paths and files */
-app
-	.use(express.static(path.join(__dirname, 'dist')))
-	.use(express.static(path.join(__dirname, 'public')))
-	.get('*', (req, res) => res.sendFile('index.html', { root: 'dist'}));
+/* static path */
+app.use(express.static(path.join(__dirname, '../dist')));
 
 /* set passport.js authentication */
+app.use(passport.initialize());
 setPassportAuthStrategy(passport);
 
 /* Router */

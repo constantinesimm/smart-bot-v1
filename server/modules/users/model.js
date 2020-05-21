@@ -8,41 +8,33 @@ const UserSchema = new Schema({
 		trim: true,
 		set: v => v.toLowerCase()
 	},
-	info: {
-		firstName: String,
-		lastName: String,
-		gender: String,
-		phoneNumber: {
-			type: String,
-			set: v => v.replace(/[+\s()]/g, '')
-		}
+	firstName: String,
+	lastName: String,
+	gender: String,
+	phoneNumber: {
+		type: String,
+		set: v => v.replace(/[+\s()]/g, '')
 	},
-	serviceData: {
-		token: {
-			type: String,
-			default: null
-		},
-		isVerified: {
-			type: Boolean,
-			default: false
-		},
-		accessExpires: Date,
-		role: {
-			type: String,
-			default: 'manager',
-			enum: ['manager', 'admin', 'super']
-		}
+	role: {
+		type: String,
+		enum: ['manager', 'admin', 'super']
 	},
-	accessData: {
-		token: {
-			type: String,
-			default: null
-		},
-		hash : {
-			type: String,
-			default: null
-		}
+	hash : {
+		type: String,
+		default: null
+	},
+	accessToken: {
+		type: String,
+		default: null
+	},
+	serviceToken: {
+		type: String,
+		default: null
+	},
+	isVerified: {
+		type: Boolean,
+		default: false
 	}
 }, { collection: 'AdminUsers' });
 
-module.exports = mongoose.model('AdminUser', UserSchema);
+module.exports = mongoose.model('AdminModel', UserSchema);

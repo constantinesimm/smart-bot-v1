@@ -1,53 +1,34 @@
+const bcrypt = require('bcryptjs');
 const LocalStrategy = require('passport-local').Strategy;
 const HttpError = require('../http-error');
-const { dbService, authHelper } = require('../../modules/users/services');
-
-const publicUserObj = user => {
-	return {
-		userId: user.userId,
-		email: user.email,
-		info: {
-			firstName: user.info.firstName,
-			lastName: user.info.lastName,
-			gender: user.info.gender,
-			phoneNumber: user.info.phoneNumber
-		},
-		serviceData: {
-			role: user.serviceData.role
-		},
-		accessData: {
-			token: user.accessData.token
-		}
-	}
-};
+const AdminModel = require('../../modules/users/model');
+const AuthService = require('../../modules/users/services/auth');
 
 module.exports = passport => {
 	passport.use(new LocalStrategy({
 		usernameField: 'email',
 		passwordField: 'secret'
 	}, (username, password, done) => {
-		dbService
-			.findOneByEmail(username)
+		AdminModel.findOne({ email: username })
 			.then(user => {
 				if (!user) return done(null, false, { status: 404, msg: 'Пользователь не найден или не существует'});
-				if (!user.serviceData.isVerified) return done(null, false, { status: 403, msg: 'Аккаунт не подтверждён. Нужно завершить регистрацию!' });
-				if (!authHelper.compareSecretWithHash(password, user.accessData.hash)) return done(null, false, { status: 401, msg: 'Не правильный логин или пароль' });
+				if (!user.isVerified) return done(null, false, { status: 403, msg: 'Аккаунт не подтверждён. Нужно завершить регистрацию!' });
 				
-				user.accessData.token = authHelper.createAuthToken(user._id);
-				
-				user
-					.save()
-					.then(() => done(null, publicUserObj(user)));
+				return bcrypt.compare(password, user.hash, function(err, res) {
+					if (err) return done(null, false, err);
+					if (!res) return done(null, false, { status: 401, msg: 'Не правильный логин или пароль' });
+					
+					user.accessToken = AuthService.createToken('access', { _id: user._id });
+					
+					user.save().then(() => done(null, { user: AuthService.publicUser(user), token: user.accessToken }));
+				});
 				
 			})
 			.catch(error => done(new HttpError(error)))
 	}));
 	
-	passport.serializeUser((user, done) => done(null, user));
-	passport.deserializeUser((id, done) => {
-		dbService
-			.findOneById(id)
-			.then(user => done(null, user))
-			.catch(error => new HttpError(error));
+	passport.serializeUser((data, done) => done(null, data.user._id));
+	passport.deserializeUser((token, done) => {
+		AdminModel.findOne({ accessToken: token }).then(user => done(null, user)).catch(error => new HttpError(error));
 	})
 };

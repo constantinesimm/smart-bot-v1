@@ -2,11 +2,11 @@ const { appHost } = require('../../config');
 
 const subjectTemplate = template => {
 	const subject = {
-		registerInvite: '[Rice] | Verify your email',
-		registerComplete: '[Rice] | Registration complete',
-		passwordRestore: '[Rice] | Password restore request',
-		passwordRestoreComplete: '[Rice] | Password restore complete',
-		userRemoveAccess: '[Rice] | Disabling access'
+		registerInvite: 'Rice | Подтверждение email',
+		registerComplete: 'Rice | Аккаунт успешно активирован',
+		passwordRestore: 'Rice | Восстановление пароля',
+		passwordRestoreComplete: 'Rice | Пароль восстановлен',
+		userRemoveAccess: 'Rice | Аккаунт удалён'
 	};
 	
 	return subject[template];

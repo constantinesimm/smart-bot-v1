@@ -33,10 +33,10 @@
         </el-menu>
         <el-button type="text" class="el-menu-collapse-btn" @click="collapseMenu">
             <span class="btn-active" v-if="!isCollapsed">
-                <i class="fas fa-angle-double-left fa-2x"></i>
+                <i class="fas fa-angle-double-left fa-lg"></i>
             </span>
             <span class="btn-collapsed" v-else>
-                <i class="fas fa-angle-double-right fa-2x"></i>
+                <i class="fas fa-angle-double-right fa-lg"></i>
             </span>
         </el-button>
     </el-aside>
@@ -61,14 +61,8 @@
 				this.isCollapsed = !this.isCollapsed;
             }
         },
-        created() {
-			this.$eventHub.$on('collapse-aside-menu', this.collapseMenu)
-        },
         mounted() {
 			this.activeLink = this.$route.path;
-        },
-        beforeDestroy() {
-			this.$eventHub.$off('collapse-aside-menu')
         }
 	}
 </script>
@@ -85,7 +79,7 @@
         }
 
         .el-menu.el-menu-vertical {
-            height: calc(100% - 55px);
+            height: calc(100% - 40px);
         }
 
         .el-menu-item i, .el-submenu i {

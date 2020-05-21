@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import store from "@/store";
+import store from "../store";
 
 Vue.use(VueRouter);
 
@@ -26,6 +26,36 @@ const routes = [
     redirect: '/users/admins/list',
     children: [
       {
+        path: 'account',
+        name: 'UsersAccount',
+        meta: {
+          title: 'Rice: Детали пользователя',
+          layout: 'admin-panel',
+          privateRoute: true
+        },
+        component: () => import('../views/users/users-account')
+      },
+      {
+        path: 'admins/list',
+        name: 'UsersAdminsList',
+        meta: {
+          title: 'Rice: Сотрудники',
+          layout: 'admin-panel',
+          privateRoute: true
+        },
+        component: () => import('../views/users/users-admins-list')
+      },
+      {
+        path: 'client/list',
+        name: 'UsersClientsList',
+        meta: {
+          title: 'Rice: Клиенты',
+          layout: 'admin-panel',
+          privateRoute: true
+        },
+        component: () => import('../views/users/users-client-list')
+      },
+      {
         path: 'login',
         name: 'UsersLogin',
         meta: {
@@ -46,34 +76,14 @@ const routes = [
         component: () => import('../views/users/users-register-complete')
       },
       {
-        path: 'client/list',
-        name: 'UsersClientsList',
+        path: ':token/password/restore',
+        name: 'UserPasswordRestore',
         meta: {
-          title: 'Rice: Клиенты',
-          layout: 'admin-panel',
-          privateRoute: true
+          title: 'Rice: Восстановление пароля',
+          layout: 'default',
+          publicRoute: true
         },
-        component: () => import('../views/users/users-client-list')
-      },
-      {
-        path: 'admins/list',
-        name: 'UsersAdminsList',
-        meta: {
-          title: 'Rice: Сотрудники',
-          layout: 'admin-panel',
-          privateRoute: true
-        },
-        component: () => import('../views/users/users-admins-list')
-      },
-      {
-        path: ':user/details',
-        name: 'UsersDetails',
-        meta: {
-          title: 'Rice: Детали пользователя',
-          layout: 'admin-panel',
-          privateRoute: true
-        },
-        component: () => import('../views/users/users-details')
+        component: () => import('../views/users/users-password-restore')
       }
     ]
   },

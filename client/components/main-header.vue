@@ -2,19 +2,15 @@
     <el-header>
         <el-col class="header-logo-container">
             <el-link :underline="false" class="header-logo-link" href="/dashboard">
-                <!--
                 <img class="header-logo-img" src="/img/logo/rice_logo.png"/>
-                -->
-                <img class="header-logo-img" src="/img/logo/background-logotype.png"/>
+                <span class="header-logo-text">Rice food</span>
             </el-link>
         </el-col>
         <el-col>
-            <el-link :underline="false" href="/users/profile">
-                <i class="fas fa-user-circle"></i> Профиль
+            <el-link :underline="false" href="/users/account">
+                <el-button type="primary" size="mini" icon="fas fa-user-circle" plain>Аккаут</el-button>
             </el-link>
-            <el-button type="text" @click="signOut">
-                <i class="fas fa-power-off"></i> Выход
-            </el-button>
+            <el-button @click="signOut" type="primary" size="mini" icon="fas fa-power-off" plain>Выход</el-button>
         </el-col>
     </el-header>
 </template>
@@ -23,12 +19,18 @@
 	export default {
 		name: 'main-header',
 		methods: {
+			dropdownHandler(command) {
+				this[command]();
+            },
+			getProfilePage() {
+				this.$router.push('/users/account');
+            },
 			signOut() {
 				this.$store.dispatch('auth/logout', { userId: this.$store.getters['auth/currentUser']._id})
 					.then(response => {
 						this.$message.success(response);
 						this.$router.push('/users/login');
-					})
+			        })
 					.catch(error => console.log(error.message));
 			}
 		}
@@ -59,21 +61,29 @@
                 display: flex;
                 justify-content: center;
                 align-content: center;
-                text-decoration: none!important;
+                align-items: center;
                 padding: 5px;
+                width: 250px;
+                color: #fc3404;
+                font: 500 36px 'Ubuntu', sans-serif;
+                text-decoration: none!important;
                 border-radius: 5px;
 
                 &:hover {
-                    background: #e6e6e680;
+                    background: #fc34041c;
                 }
 
                 .header-logo-img {
-                    height: 55px;
-                    width: 250px!important;
+                    height: 40px;
 
                     &:hover {
                         opacity: .8;
                     }
+                }
+
+                .header-logo-text {
+                    padding-left: 5px;
+
                 }
             }
         }

@@ -1,8 +1,8 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-const AdminModel = require('./model');
-const sendEmailLetter = require('../../libs/mailer');
-const { sessionSecretString } = require('../../config');
+const AdminModel = require('../model');
+const sendEmailLetter = require('../../../libs/mailer');
+const { sessionSecretString } = require('../../../config');
 
 const getMaxUserId = () => Promise.resolve(AdminModel.find({}, { _id: 0, userId: 1 }).sort({ userId: -1 }).limit(1));
 const signToken = (type, data) => {
@@ -11,7 +11,7 @@ const signToken = (type, data) => {
 	return Promise.resolve(jwt.sign(data, sessionSecretString, { expiresIn: expiresTime }));
 };
 
-class UserService {
+class AuthService {
 	static createToken(type, data) {
 		const expiresTime = type === 'service' ? '24h' : type === 'access' ? '9h' : 1000;
 		
@@ -24,23 +24,18 @@ class UserService {
 			
 			return decoded;
 		});
-		
 		// Проверка сервисного токена
 		if (type === 'service') {
 			if (decodedJwt.name) {
 				let reason = decodedJwt.name === 'TokenExpiredError' ?
-					{
-						status: 400,
-						message: 'Срок действия ссылки истёк. Воспользуйтесь функционалом восстановления пароля'
-					} : {status: 403, message: 'Доступ запрещён'};
+					{ status: 400, message: 'Срок действия ссылки истёк. Воспользуйтесь функционалом восстановления пароля' } :
+					{ status: 403, message: 'Доступ запрещён.\nНекорректная ссылка регистрации' };
 				
 				return Promise.reject(reason);
 			} else {
-				let queryKey = Object.keys(decodedJwt)[0];
-				
-				return AdminModel.findOne({[Symbol(queryKey)]: decodedJwt[queryKey]}, {}, (error, result) => {
-					if (error) return Promise.reject({status: 500, message: error.message})
-					if (!result) return Promise.reject({status: 404, message: 'Пользователь не найден'})
+				return AdminModel.findOne({ 'email': decodedJwt.email }, (error, result) => {
+					if (error) return Promise.reject({ status: 500, message: error.message })
+					if (!result) return Promise.reject({ status: 403, message: 'Некорректная ссылка регистрации. Пользователь не найден' })
 					
 					return Promise.resolve(result);
 				})
@@ -51,12 +46,12 @@ class UserService {
 		if (type === 'access') {
 			if (decodedJwt.name) {
 				let reason = decodedJwt.name === 'TokenExpiredError' ?
-					{ status: 401, message: 'Срок действия сессии истёк. Пожалуйста авторизирутесь' } :
-					{ status: 401, message: 'Ошибочный токен, доступ запрещён. Пожалуйста авторизируйтесь' };
+					{ status: 401, message: 'Срок действия сессии истёк. Пройдите авторизацию повторно' } :
+					{ status: 401, message: 'Некорректный токен сессии. Пройдите авторизацию повторно' };
 				
 				return Promise.reject(reason);
 			} else {
-				return AdminModel.findOne({ accessToken: token}, {}, (error, result) => {
+				return AdminModel.findOne({ 'accessToken': token }, {}, (error, result) => {
 					if (error) return Promise.reject({status: 500, message: error.message})
 					if (!result) return Promise.reject({status: 401, message: 'Пользователь не найден'})
 					
@@ -101,7 +96,7 @@ class UserService {
 					
 					sendEmailLetter('registerInvite', user.email, null, user.serviceToken);
 					
-					return resolve('Пользователю отправлено приглашение на email');
+					return resolve({ message: 'Пользователю отправлено приглашение на email', user: user });
 				});
 			})
 		})
@@ -129,7 +124,7 @@ class UserService {
 							.then(() => {
 								sendEmailLetter('registerComplete', data.email, data.firstName, null)
 								
-								return resolve('Аккаунт успешно активирован');
+								return resolve({ message: 'Аккаунт успешно активирован' });
 							})
 							.catch(error => reject({ status: 500, message: error.message }));
 					})
@@ -145,7 +140,7 @@ class UserService {
 			
 			AdminModel.findOne({ email: email }, (error, user) => {
 				if (error) return reject({ status: 500, message: error.message });
-				if (!user) return reject({status: 404, message: 'Пользователь не найден'});
+				if (!user) return reject({ status: 404, message: 'Пользователь не найден' });
 				
 				user.hash = null;
 				user.accessToken = null;
@@ -156,7 +151,7 @@ class UserService {
 					.then(() => {
 						sendEmailLetter('passwordRestore', user.email, user.firstName, token);
 						
-						return resolve('Ссылка на восстановление пароля отправлена на email.');
+						return resolve({ message: 'Ссылка на восстановление пароля отправлена на email' });
 					})
 					.catch(error => reject({ status: 500, message: error.message }))
 			})
@@ -181,24 +176,11 @@ class UserService {
 							.then(() => {
 								sendEmailLetter('passwordRestoreComplete', user.email, user.firstName, null);
 								
-								return resolve('Пароль успешно восстановлен. Для авторизации используйте ваш email и новый пароль')
+								return resolve({ message: 'Пароль успешно восстановлен. Для авторизации используйте ваш email и новый пароль' })
 							})
 							.catch(error => reject({ status: 500, message: error.message }));
 					})
 				})
-			})
-		})
-	}
-	
-	static removeEmployerAccount(email) {
-		return new Promise((resolve, reject) => {
-			AdminModel.deleteOne({ email: email }, (error, result) => {
-				if (error) return reject({ status: 500, message: error.message });
-				if (!result.deletedCount) return reject({ status: 404, message: 'Пользователь не найден' });
-				
-				sendEmailLetter('userRemoveAccess', email, null, null)
-				
-				return resolve('Пользователь успешно удалён');
 			})
 		})
 	}
@@ -210,10 +192,10 @@ class UserService {
 				if (error) return reject({ status: 500, message: error.message });
 				if (!user) return reject({ status: 404, message: 'Пользователь не найден'});
 				
-				return resolve(`Хорошего дня, ${ user.firstName }!`);
+				return resolve({ message: `Хорошего дня, ${ user.firstName }!` });
 			});
 		});
 	}
 }
 
-module.exports = UserService;
+module.exports = AuthService;

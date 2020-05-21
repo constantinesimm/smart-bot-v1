@@ -1,7 +1,6 @@
 import Axios from 'axios';
 import Raven from 'raven-js';
-import store from '@/store';
-import ls from '../storage/secure-ls';
+import store from '../../store';
 
 const getClient = (baseUrl = null) => {
 	let options = {
@@ -18,7 +17,7 @@ const getClient = (baseUrl = null) => {
 	client.interceptors.request.use(
 		requestConfig => {
 			if (store.getters['auth/isLoggedIn']) {
-				requestConfig.headers.Authorization = store.getters['auth/getAuthToken'];
+				requestConfig.headers['Authorization'] = store.getters['auth/getAuthToken'];
 				
 				return requestConfig;
 			}
@@ -36,7 +35,11 @@ const getClient = (baseUrl = null) => {
 		response => response,
 		(error) => {
 			if (error.response.status === 401) {
-				store.dispatch('auth/logout');
+				store
+					.dispatch('auth/logout')
+					.then(response => console.log(response))
+					.catch(error => console.log(error))
+				
 			}
 			if (error.response.status >= 500) {
 				Raven.captureException(error);

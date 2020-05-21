@@ -1,50 +1,52 @@
 <template>
-    <el-row type="flex" justify="center">
-        <el-col :span="24">
-            <el-form :model="loginForm" :rules="rules" ref="loginForm" size="small">
-                <el-form-item class="el-form-item__header">
-                    <img class="el-form-item__logo" src="/rice_logo.png"/>
-                </el-form-item>
+    <transition name="el-zoom-in-center">
+        <el-row type="flex" justify="center">
+            <el-col :span="24">
+                <el-form :model="loginForm" :rules="rules" ref="loginForm" size="small">
+                    <el-form-item class="el-form-item__header">
+                        <img class="el-form-item__logo" src="/img/logo/rice_logo.png"/>
+                    </el-form-item>
 
-                <el-divider class="el-form-item__top-divider"/>
+                    <el-divider class="el-form-item__top-divider"/>
 
-                <el-form-item label="E-mail" prop="email" @keypress.enter.native="submitForm">
+                    <el-form-item label="E-mail" prop="email" @keypress.enter.native="submitForm">
 
-                    <el-input v-model="loginForm.email" placeholder="Пример: example@gmail.com"
-                              v-on:input="validateFieldOnInput('loginForm', 'formFieldsValid', 'email')"/>
+                        <el-input v-model="loginForm.email" placeholder="Пример: example@gmail.com"
+                                  v-on:input="validateFieldOnInput('loginForm', 'formFieldsValid', 'email')"/>
 
-                </el-form-item>
+                    </el-form-item>
 
-                <el-form-item label="Пароль" prop="secret" @keypress.enter.native="submitForm">
+                    <el-form-item label="Пароль" prop="secret" @keypress.enter.native="submitForm">
 
-                    <el-input v-model="loginForm.secret"  placeholder="Пример: Example1" show-password
-                              v-on:input="validateFieldOnInput('loginForm', 'formFieldsValid', 'secret')"/>
+                        <el-input v-model="loginForm.secret"  placeholder="Пример: Example1" show-password
+                                  v-on:input="validateFieldOnInput('loginForm', 'formFieldsValid', 'secret')"/>
 
-                </el-form-item>
+                    </el-form-item>
 
-                <el-form-item class="el-form-item__submit">
-                    <el-button @click="submitForm" :loading="this.isLoading" :disabled="!checkFormFields" type="primary" size="medium" plain>
-                        <i class="fas fa-sign-in-alt" v-if="!this.isLoading"></i>
-                        Авторизация
-                    </el-button>
-                </el-form-item>
+                    <el-form-item class="el-form-item__submit">
+                        <el-button @click="submitForm" :loading="this.isSubmitLoading" :disabled="!checkFormFields" type="primary" size="medium" plain>
+                            <i class="fas fa-sign-in-alt" v-if="!this.isSubmitLoading"></i>
+                            Авторизация
+                        </el-button>
+                    </el-form-item>
 
-                <el-divider class="el-form-item__bottom-divider"/>
+                    <el-divider class="el-form-item__bottom-divider"/>
 
-                <el-form-item class="el-form-item__footer">
-                    <el-button @click="openPasswordRestore" type="text" size="medium">
-                        <i class="far fa-life-ring"></i>
-                        Забыл пароль?
-                    </el-button>
-                </el-form-item>
-            </el-form>
-        </el-col>
-    </el-row>
+                    <el-form-item class="el-form-item__footer">
+                        <el-button @click="openPasswordRestore" type="text" size="medium">
+                            <i class="far fa-life-ring"></i>
+                            Забыл пароль?
+                        </el-button>
+                    </el-form-item>
+                </el-form>
+            </el-col>
+        </el-row>
+    </transition>
 </template>
 
 <script>
-    import validateRules from '@/plugins/validator/rules';
-    import usersClient from '@/plugins/http-clients/users';
+    import validateRules from '../../plugins/validator/rules';
+    import authClient from '../../plugins/http-clients/auth';
 
     export default {
         name: "users-login",
@@ -64,7 +66,7 @@
                     email: false,
                     secret: false
                 },
-                isLoading: false
+	            isSubmitLoading: false
             }
         },
         computed: {
@@ -79,42 +81,30 @@
             //form submit action by click and enter keypress
             submitForm() {
                 if (!this.checkFormFields) return this.$refs.loginForm.validate(valid => valid);
-                else {
-                    this.isLoading = true;
 
-                    this.$store.dispatch('auth/login', this.loginForm)
-                        .then(() => {
-                        	this.$message.success('Авторизация успешна!');
+	            this.isSubmitLoading = true;
 
-                        	this.$router.push('/users');
-                        })
-                        .catch(error => this.$message.error(error.message))
-	                    .finally(() => this.isLoading = false);
-                    /*
-                    usersClient.login(this.loginForm)
-                    .then(data => console.log(data))
-                    .catch(error => )
-                    .finally(() => this.isLoading = false)
-                     */
-                }
+	            this.$store.dispatch('auth/login', this.loginForm)
+		            .then(response => {
+			            this.$message.success(`Авторизация успешна. \n Приветствую, ${ response.user.firstName }!`);
+			            this.$router.push('/dashboard');
+		            })
+		            .catch(error => this.$message.error(error.message))
+		            .finally(() => this.isSubmitLoading = false);
             },
             openPasswordRestore() {
                 this.$prompt('Введите ваш e-mail', 'Забыл пароль?', {
-
-                    confirmButtonText: 'Сбросить',
-                    cancelButtonText: 'Закрыть',
+                    confirmButtonText: 'Восстановить',
+                    cancelButtonText: 'Отменить',
                     inputPattern: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
                     inputErrorMessage: 'Некорректный формат поля "E-mail"'
                 })
-                .then(({ value }) => {
-                    this.$message.success({
-                        type: 'success',
-                        message: 'Your email is:' + value
+                    .then(({ value }) => this.$store.dispatch('auth/password_restore', { 'email': value }))
+                    .then(response => this.$notify.success(response.message))
+                    .catch(error => {
+	                    this.$notify.error(error.message);
+	                    setTimeout(() => this.openPasswordRestore(), 2000)
                     });
-                })
-                .catch(() => {
-                    this.$message.warning('Сброс пароля отменён');
-                });
             }
         },
 
@@ -122,6 +112,7 @@
 </script>
 
 <style lang="scss" scoped>
+
     .el-form {
         padding: 15px 25px;
         border-radius: 15px;

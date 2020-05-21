@@ -1,9 +1,12 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import SecureLS from 'secure-ls';
+import ls from '../plugins/storage/secure-ls';
 import createPersistedState from 'vuex-persistedstate';
+
+/**
+ * Modules
+ */
 import auth from './modules/auth';
-import ls from '@/plugins/storage/secure-ls';
 
 Vue.use(Vuex);
 

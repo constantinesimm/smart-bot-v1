@@ -1,114 +1,113 @@
 <template>
     <el-row type="flex" justify="center" class="el-page-row">
         <el-col :span="24">
-            <el-form :model="registerForm" :rules="rules" v-loading="this.isFormLoading" ref="registerForm" size="small">
-                <el-form-item class="el-form-item__header">
-                    <img class="el-form-item__logo" src="/rice_logo.png"/>
-                </el-form-item>
-
-                <el-divider class="el-form-item__top-divider"/>
-
-                <div v-if="errorMessage">
-                    <el-alert title="Ошибка" type="error" :description="errorMessage" :closable="false" show-icon/>
-                </div>
-
-                <div v-else>
-                    <el-row class="el-form-group__row">
-                        <el-col :span="6">
-                            <el-form-item label="User ID" prop="userId">
-                                <el-input v-model="registerForm.userId" v-on:input="submitForm" :disabled="true" readonly/>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="16">
-                            <el-form-item label="Email" prop="email">
-                                <el-input v-model="registerForm.email" v-on:input="submitForm" :disabled="true" readonly/>
-                            </el-form-item>
-                        </el-col>
-                    </el-row>
-
-                    <el-row class="el-form-group__row">
-                        <el-col :span="11">
-                            <el-form-item label="Имя" prop="firstName" @keypress.enter.native="submitForm">
-
-                                <el-input v-model="registerForm.firstName" maxlength="20" show-word-limit placeholder="Пример: Василий"
-                                          v-on:input="validateFieldOnInput('registerForm', 'formFieldsValid', 'firstName')"/>
-
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="11">
-                            <el-form-item label="Фамилия" prop="lastName" @keypress.enter.native="submitForm">
-
-                                <el-input v-model="registerForm.lastName" maxlength="20" show-word-limit placeholder="Пример: Васильев"
-                                          v-on:input="validateFieldOnInput('registerForm', 'formFieldsValid', 'lastName')" />
-
-                            </el-form-item>
-                        </el-col>
-                    </el-row>
-
-                    <el-row class="el-form-group__row">
-                        <el-col :span="8">
-                            <el-form-item label="Пол" prop="gender">
-
-                                <el-select v-model="registerForm.gender" placeholder="Пол"
-                                           v-on:visible-change="validateFieldOnInput('registerForm', 'formFieldsValid', 'gender')">
-                                    <el-option label="Мужчина" value="male"/>
-                                    <el-option label="Женщина" value="female"/>
-                                </el-select>
-
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="14">
-                            <el-form-item label="Телефон" prop="phoneNumber" @keypress.enter.native="submitForm">
-                                <el-input v-model="registerForm.phoneNumber" v-mask="'+99 (999) 999 99 99'" placeholder="Пример: 380671112233"
-                                          v-on:input="validateFieldOnInput('registerForm', 'formFieldsValid', 'phoneNumber')"/>
-                            </el-form-item>
-                        </el-col>
-                    </el-row>
-
-                    <el-row class="el-form-group__row">
-                        <el-col :span="11">
-                            <el-form-item label="Пароль" prop="secret" @keypress.enter.native="submitForm">
-
-                                <el-input v-model="registerForm.secret" show-password placeholder="Пример: Example1"
-                                          v-on:input="validateFieldOnInput('registerForm', 'formFieldsValid', 'secret')" />
-
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="11">
-                            <el-form-item label="Подтвердить" prop="secretConfirm" @keypress.enter.native="submitForm">
-
-                                <el-input v-model="registerForm.secretConfirm" show-password placeholder="Пример: Example1"
-                                          v-on:input="validateFieldOnInput('registerForm','formFieldsValid', 'secretConfirm')"/>
-
-                            </el-form-item>
-                        </el-col>
-                    </el-row>
-
-                    <el-form-item class="el-form-item__submit">
-                        <el-button v-on:click="submitForm" :loading="this.isSubmitLoading" :disabled="!this.checkFormFields" type="primary" size="medium" plain>
-                            <i class="fas fa-user-check" v-if="!this.isSubmitLoading"></i>
-                            Регистрация
-                        </el-button>
+            <transition name="el-zoom-in-center">
+                <el-form v-show="!this.isFormLoading" :model="registerForm" :rules="rules"
+                         :loading="this.isFormLoading" ref="registerForm" size="small">
+                    <el-form-item class="el-form-item__header">
+                        <img class="el-form-item__logo" src="/img/logo/rice_logo.png"/>
                     </el-form-item>
 
-                </div>
+                    <el-divider class="el-form-item__top-divider"/>
 
-                <el-divider class="el-form-item__bottom-divider"/>
+                    <div>
+                        <el-row class="el-form-group__row">
+                            <el-col :span="6">
+                                <el-form-item label="User ID" prop="userId">
+                                    <el-input v-model="registerForm.userId" v-on:input="submitForm" :disabled="true" readonly/>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="16">
+                                <el-form-item label="Email" prop="email">
+                                    <el-input v-model="registerForm.email" v-on:input="submitForm" :disabled="true" readonly/>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
 
-                <el-form-item class="el-form-item__footer">
-                    <el-link href="/users/login" size="medium">
-                        <i class="fas fa-sign-in-alt"></i>
-                        Страница авторизации
-                    </el-link>
-                </el-form-item>
-            </el-form>
+                        <el-row class="el-form-group__row">
+                            <el-col :span="11">
+                                <el-form-item label="Имя" prop="firstName" @keypress.enter.native="submitForm">
+
+                                    <el-input v-model="registerForm.firstName" maxlength="20" show-word-limit placeholder="Пример: Василий"
+                                              v-on:input="validateFieldOnInput('registerForm', 'formFieldsValid', 'firstName')"/>
+
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="11">
+                                <el-form-item label="Фамилия" prop="lastName" @keypress.enter.native="submitForm">
+
+                                    <el-input v-model="registerForm.lastName" maxlength="20" show-word-limit placeholder="Пример: Васильев"
+                                              v-on:input="validateFieldOnInput('registerForm', 'formFieldsValid', 'lastName')" />
+
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+
+                        <el-row class="el-form-group__row">
+                            <el-col :span="8">
+                                <el-form-item label="Пол" prop="gender">
+
+                                    <el-select v-model="registerForm.gender" placeholder="Пол"
+                                               v-on:visible-change="validateFieldOnInput('registerForm', 'formFieldsValid', 'gender')">
+                                        <el-option label="Мужчина" value="male"/>
+                                        <el-option label="Женщина" value="female"/>
+                                    </el-select>
+
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="14">
+                                <el-form-item label="Телефон" prop="phoneNumber" @keypress.enter.native="submitForm">
+                                    <el-input v-model="registerForm.phoneNumber" v-mask="'+99 (999) 999 99 99'" placeholder="Пример: 380671112233"
+                                              v-on:input="validateFieldOnInput('registerForm', 'formFieldsValid', 'phoneNumber')"/>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+
+                        <el-row class="el-form-group__row">
+                            <el-col :span="11">
+                                <el-form-item label="Пароль" prop="secret" @keypress.enter.native="submitForm">
+
+                                    <el-input v-model="registerForm.secret" show-password placeholder="Пример: Example1"
+                                              v-on:input="validateFieldOnInput('registerForm', 'formFieldsValid', 'secret')" />
+
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="11">
+                                <el-form-item label="Подтвердить" prop="secretConfirm" @keypress.enter.native="submitForm">
+
+                                    <el-input v-model="registerForm.secretConfirm" show-password placeholder="Пример: Example1"
+                                              v-on:input="validateFieldOnInput('registerForm','formFieldsValid', 'secretConfirm')"/>
+
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+
+                        <el-form-item class="el-form-item__submit">
+                            <el-button v-on:click="submitForm" :loading="this.isSubmitLoading" :disabled="!this.checkFormFields" type="primary" size="medium" plain>
+                                <i class="fas fa-user-check" v-if="!this.isSubmitLoading"></i>
+                                Регистрация
+                            </el-button>
+                        </el-form-item>
+
+                    </div>
+
+                    <el-divider class="el-form-item__bottom-divider"/>
+
+                    <el-form-item class="el-form-item__footer">
+                        <el-link href="/users/login" size="medium">
+                            <i class="fas fa-sign-in-alt"></i>
+                            Страница авторизации
+                        </el-link>
+                    </el-form-item>
+                </el-form>
+            </transition>
         </el-col>
     </el-row>
 </template>
 
 <script>
-    import validateRules from '@/plugins/validator/rules';
-    import usersClient from '@/plugins/http-clients/users';
+    import validateRules from '../../plugins/validator/rules';
+    import authClient from '../../plugins/http-clients/auth';
 
     export default {
         name: "users-register-complete",
@@ -153,18 +152,16 @@
             }
         },
         created() {
-            usersClient.checkServiceToken({ serviceToken: this.$route.params.token })
+            authClient.checkToken('service', { token: this.$route.params.token })
 	            .then(response => {
 		            this.registerForm.userId = response.user.userId;
 		            this.registerForm.email = response.user.email;
+		            this.isFormLoading = false;
 	            })
 	            .catch(error => {
-		            document.title = 'Rice: Ошибка';
-		            this.errorMessage = error.message;
-
-		            setTimeout(() => this.$router.push('/users/login'), 5000);
+		            this.$notify.error(error.message);
+		            this.$router.push('/users/login');
 	            })
-	            .finally(() => this.isFormLoading = false);
         },
         computed: {
             checkFormFields: function () {
@@ -180,7 +177,7 @@
                 else {
                     this.isSubmitLoading = true;
 
-                    usersClient.registerComplete(this.registerForm)
+                    authClient.registerComplete(this.registerForm)
                         .then(response => {
 	                        console.log(response)
 	                        this.$message.success(response);

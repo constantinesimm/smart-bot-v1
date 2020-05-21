@@ -2,7 +2,7 @@ const bcrypt = require('bcryptjs');
 const LocalStrategy = require('passport-local').Strategy;
 const HttpError = require('../http-error');
 const AdminModel = require('../../modules/users/model');
-const UserService = require('../../modules/users/service');
+const AuthService = require('../../modules/users/services/auth');
 
 module.exports = passport => {
 	passport.use(new LocalStrategy({
@@ -18,9 +18,9 @@ module.exports = passport => {
 					if (err) return done(null, false, err);
 					if (!res) return done(null, false, { status: 401, msg: 'Не правильный логин или пароль' });
 					
-					user.accessToken = UserService.createToken('access', { _id: user._id });
+					user.accessToken = AuthService.createToken('access', { _id: user._id });
 					
-					user.save().then(() => done(null, { user: UserService.publicUser(user), token: user.accessToken }));
+					user.save().then(() => done(null, { user: AuthService.publicUser(user), token: user.accessToken }));
 				});
 				
 			})

@@ -107,7 +107,7 @@
 
 <script>
     import validateRules from '../../plugins/validator/rules';
-    import authClient from '../../plugins/http-clients/auth';
+    import authClient from '../../plugins/http-client/auth';
 
     export default {
         name: "users-register-complete",
@@ -159,7 +159,7 @@
 		            this.isFormLoading = false;
 	            })
 	            .catch(error => {
-		            this.$notify.error(error.message);
+		            this.$message.error(error.message);
 		            this.$router.push('/users/login');
 	            })
         },

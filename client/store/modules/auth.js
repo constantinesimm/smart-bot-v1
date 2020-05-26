@@ -1,7 +1,7 @@
 import Axios from 'axios';
 import { AUTH } from "../../config/constants/endpoints";
-
-import authClient from '../../plugins/http-clients/auth';
+import authClient from '../../plugins/http-client/auth';
+import router from "../../router";
 
 let state = {
 	status: '',
@@ -43,41 +43,41 @@ const actions = {
 		return new Promise((resolve, reject) => {
 			commit('auth_request');
 			
-			Axios.post(AUTH.LOGIN, payload, {
-				baseURL: AUTH.BASE_URL,
-				headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' }
-			})
+			Axios.post(AUTH.BASE_URL + AUTH.LOGIN, payload)
 				.then(response => {
 					commit('auth_success', response.data);
-					Axios.defaults.headers.common['Authorization'] = response.data.token;
 					
 					return resolve(response.data);
 				})
 				.catch(error => {
 					commit('auth_error');
-					delete Axios.defaults.headers.common['Authorization'];
 					
-					return reject(error);
+					return reject(error.response.data);
 				});
 		});
 	},
-	logout({ commit }, payload) {
+	logout({ commit }) {
 		return new Promise((resolve, reject) => {
 			commit('auth_request');
 			
-			authClient.logout(payload)
-				.then(data => {
+			authClient.logout()
+				.then(response => {
 					commit('logout');
-					delete Axios.defaults.headers.common['Authorization'];
 					
-					return resolve(data);
+					return resolve(response);
 				})
 				.catch(error => {
-					commit('auth_error');
+					commit('err_logout');
 					
 					return reject(error);
-				});
+				})
 		});
+	},
+	err_logout({ commit }, payload) {
+		commit('logout');
+		setTimeout(() => router.push('/users/login'), 1000);
+		
+		return payload;
 	},
 	update_user({ commit }, payload) {
 		commit('user_update', payload);

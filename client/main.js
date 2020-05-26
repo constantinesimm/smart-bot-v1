@@ -15,6 +15,10 @@ Vue.component('admin-panel-layout', AdminPanelLayout);
 import router from './router';
 import store from './store';
 
+/* Libs and npm packages */
+import Axios from 'axios';
+import ls from './plugins/storage/secure-ls';
+
 /* Directives */
 import AwesomeMask from 'awesome-mask';
 

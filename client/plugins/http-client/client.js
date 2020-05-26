@@ -1,13 +1,14 @@
 import Axios from 'axios';
 import Raven from 'raven-js';
 import store from '../../store';
+import router from '../../router';
 
 const getClient = (baseUrl = null) => {
 	let options = {
 		baseURL: baseUrl,
 		headers: {
 			'Accept': 'application/json',
-			'Content-Type': 'application/json'
+			'Content-Type': 'application/json; charset=utf-8'
 		}
 	};
 	
@@ -17,7 +18,7 @@ const getClient = (baseUrl = null) => {
 	client.interceptors.request.use(
 		requestConfig => {
 			if (store.getters['auth/isLoggedIn']) {
-				requestConfig.headers['Authorization'] = store.getters['auth/getAuthToken'];
+				requestConfig.headers.Authorization = store.getters['auth/getAuthToken'];
 				
 				return requestConfig;
 			}
@@ -35,12 +36,11 @@ const getClient = (baseUrl = null) => {
 		response => response,
 		(error) => {
 			if (error.response.status === 401) {
-				store
-					.dispatch('auth/logout')
-					.then(response => console.log(response))
-					.catch(error => console.log(error))
+				store.dispatch('auth/err_logout', error);
 				
+				return Promise.reject(error);
 			}
+			
 			if (error.response.status >= 500) {
 				Raven.captureException(error);
 			}
@@ -52,6 +52,7 @@ const getClient = (baseUrl = null) => {
 	return client;
 };
 
+export { getClient };
 /**
  * API Clients constructor
  */

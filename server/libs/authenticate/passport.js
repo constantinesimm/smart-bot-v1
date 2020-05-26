@@ -11,12 +11,12 @@ module.exports = passport => {
 	}, (username, password, done) => {
 		AdminModel.findOne({ email: username })
 			.then(user => {
-				if (!user) return done(null, false, { status: 404, msg: 'Пользователь не найден или не существует'});
-				if (!user.isVerified) return done(null, false, { status: 403, msg: 'Аккаунт не подтверждён. Нужно завершить регистрацию!' });
+				if (!user) return done(null, false, { status: 404, message: 'Пользователь не найден или не существует'});
+				if (!user.isVerified) return done(null, false, { status: 403, message: 'Аккаунт не подтверждён. Нужно завершить регистрацию!' });
 				
 				return bcrypt.compare(password, user.hash, function(err, res) {
 					if (err) return done(null, false, err);
-					if (!res) return done(null, false, { status: 401, msg: 'Не правильный логин или пароль' });
+					if (!res) return done(null, false, { status: 401, message: 'Не правильный логин или пароль' });
 					
 					user.accessToken = AuthService.createToken('access', { _id: user._id });
 					

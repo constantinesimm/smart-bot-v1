@@ -13,7 +13,7 @@ const signToken = (type, data) => {
 
 class AuthService {
 	static createToken(type, data) {
-		const expiresTime = type === 'service' ? '24h' : type === 'access' ? '9h' : 1000;
+		const expiresTime = type === 'service' ? '24h' : type === 'access' ? '3h' : 1000;
 		
 		return jwt.sign(data, sessionSecretString, { expiresIn: expiresTime })
 	}
@@ -21,15 +21,15 @@ class AuthService {
 	static verifyToken(type, token) {
 		const decodedJwt = jwt.verify(token, sessionSecretString, {},(error, decoded) => {
 			if (error) return error;
-			
 			return decoded;
 		});
+		
 		// Проверка сервисного токена
 		if (type === 'service') {
 			if (decodedJwt.name) {
 				let reason = decodedJwt.name === 'TokenExpiredError' ?
 					{ status: 400, message: 'Срок действия ссылки истёк. Воспользуйтесь функционалом восстановления пароля' } :
-					{ status: 403, message: 'Доступ запрещён.\nНекорректная ссылка регистрации' };
+					{ status: 403, message: 'Доступ запрещён.\nНекорректная ссылка регистрации. Воспользуйтесь функционалом восстановления пароля' };
 				
 				return Promise.reject(reason);
 			} else {
@@ -45,18 +45,16 @@ class AuthService {
 		//Проверка токена доступа
 		if (type === 'access') {
 			if (decodedJwt.name) {
-				let reason = decodedJwt.name === 'TokenExpiredError' ?
-					{ status: 401, message: 'Срок действия сессии истёк. Пройдите авторизацию повторно' } :
-					{ status: 401, message: 'Некорректный токен сессии. Пройдите авторизацию повторно' };
-				
-				return Promise.reject(reason);
+				return decodedJwt.name === 'TokenExpiredError' ?
+					Promise.reject({ status: 401, message: 'Срок действия сессии истёк. Пройдите авторизацию повторно' }) :
+					Promise.reject({ status: 401, message: 'Некорректный токен сессии. Пройдите авторизацию повторно' });
 			} else {
-				return AdminModel.findOne({ 'accessToken': token }, {}, (error, result) => {
-					if (error) return Promise.reject({status: 500, message: error.message})
-					if (!result) return Promise.reject({status: 401, message: 'Пользователь не найден'})
+				return AdminModel.findById(decodedJwt._id, {}, (error, result) => {
+					if (error) return Promise.reject({ status: 500, message: error.message })
+					if (!result) return Promise.reject({ status: 401, message: 'Пользователь не найден' })
 					
 					return Promise.resolve();
-				})
+				});
 			}
 		}
 	}
@@ -186,12 +184,12 @@ class AuthService {
 	}
 	
 	static signOutRequest(userId) {
-		console.log(userId)
+		
 		return new Promise((resolve, reject) => {
 			AdminModel.findByIdAndUpdate(userId,{ accessToken: null },{ new: true }, (error, user) => {
 				if (error) return reject({ status: 500, message: error.message });
 				if (!user) return reject({ status: 404, message: 'Пользователь не найден'});
-				
+				console.log(user)
 				return resolve({ message: `Хорошего дня, ${ user.firstName }!` });
 			});
 		});

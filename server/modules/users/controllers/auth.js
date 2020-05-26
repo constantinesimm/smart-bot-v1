@@ -1,62 +1,56 @@
 const passport = require('passport');
 const router = require('express').Router();
-const HttpError = require('../../../libs/http-error');
 const AuthService = require('../services/auth');
+const authHandler = require('../../../middleware/auth-handler');
+const HttpError = require('../../../libs/http-error');
 
-router.post('/authenticate', (req, res, next) => {
+router.post('/authenticate', authHandler.publicRoute, (req, res, next) => {
 	passport.authenticate('local', { session: false },(error, user, info) => {
-		if (error) return next(new HttpError(error));
-		if (!user) return next(new HttpError(info.status, info.msg));
+		if (error) return next(new HttpError(error.status, error.message));
+		if (!user) return next(new HttpError(info.status, info.message));
 		
 		req.logIn(user, (error) => {
-			if (error) return next(new HttpError(error));
+			if (error) return next(new HttpError(error.status, error.message));
 			
 			return res.json(user);
 		})
 	})(req, res, next);
 });
 
-router.post('/register/:action', (req, res, next) => {
-	if (req.params.action === 'invite') {
-		
-		AuthService.registerRequest(req.body)
-			.then(data => res.json(data))
-			.catch(error => next(new HttpError(error.status, error.message)));
-		
-	} else if (req.params.action === 'complete') {
-		
-		AuthService.registerComplete(req.body)
-			.then(data => res.json(data))
-			.catch(error => next(new HttpError(error.status, error.message)));
-		
-	} else return next(new HttpError(404, 'Not Found'));
+router.post('/register/invite', authHandler.privateRoute, (req, res, next) => {
+	AuthService.registerRequest(req.body)
+		.then(data => res.json(data))
+		.catch(error => next(new HttpError(error.status, error.message)));
 });
 
-router.post('/password/restore/:action', (req, res, next) => {
-	if (req.params.action === 'invite') {
-		
-		AuthService.passwordRestoreRequest(req.body.email)
-			.then(response => res.json({ message: response }))
-			.catch(error => next(new HttpError(error.status, error.message)));
-		
-	} else if (req.params.action === 'complete') {
-		
-		AuthService.passwordRestoreComplete(req.body)
-			.then(response => res.json({ message: response }))
-			.catch(error => next(new HttpError(error.status, error.message)));
-		
-	} else return next(new HttpError(404, 'Not Found'));
+router.post('/register/complete', authHandler.publicRoute, (req, res, next) => {
+	AuthService.registerComplete(req.body)
+		.then(data => res.json(data))
+		.catch(error => next(new HttpError(error.status, error.message)));
 });
 
-router.post('/check/token/:type', (req, res, next) => {
+router.post('/password/restore/invite', authHandler.publicRoute, (req, res, next) => {
+	AuthService.passwordRestoreRequest(req.body.email)
+		.then(response => res.json({ message: response }))
+		.catch(error => next(new HttpError(error.status, error.message)));
+});
+
+router.post('/password/restore/complete', authHandler.publicRoute, (req, res, next) => {
+	AuthService.passwordRestoreComplete(req.body)
+		.then(response => res.json({ message: response }))
+		.catch(error => next(new HttpError(error.status, error.message)));
+});
+
+router.post('/check/token/:type', authHandler.publicRoute, (req, res, next) => {
 	AuthService.verifyToken(req.params.type, req.body.token)
 		.then(response => req.params.type === 'service' ? res.json({ user: AuthService.publicUser(response)}) : res.json(response))
 		.catch(error => next(new HttpError(error.status, error.message)));
 });
 
-router.post('/logout', (req, res, next) => {
-	AuthService.signOutRequest(req.body.userId)
-		.then(response => res.json(response))
+router.post('/logout', authHandler.privateRoute, (req, res, next) => {
+	AuthService.verifyToken('access', req.headers.authorization)
+		.then(response => AuthService.signOutRequest(response._id))
+		.then(data => res.json(data))
 		.catch(error => next(new HttpError(error.status, error.message)));
 });
 

@@ -32,7 +32,7 @@
             </div>
         </div>
         <div slot="default">
-            <el-table :data="adminUsersList.filter(data => !usersListSearch || data.email.toLowerCase().includes(usersListSearch.toLowerCase()) || data.fullName.toLowerCase().includes(usersListSearch.toLowerCase()) || data.phoneNumber.toLowerCase().includes(usersListSearch.toLowerCase()))">
+            <el-table v-loading="isTableLoading" :data="adminUsersList.filter(data => !usersListSearch || data.email.toLowerCase().includes(usersListSearch.toLowerCase()) || data.fullName.toLowerCase().includes(usersListSearch.toLowerCase()) || data.phoneNumber.toLowerCase().includes(usersListSearch.toLowerCase()))">
                 <template slot="empty"><div>Нет данных</div></template>
 
                 <!-- userId table column -->
@@ -165,8 +165,8 @@
 
 <script>
 	import validateRules from '../../plugins/validator/rules';
-	import usersClient from '../../plugins/http-clients/users';
-	import authClient from '../../plugins/http-clients/auth';
+	import usersClient from '../../plugins/http-client/users';
+	import authClient from '../../plugins/http-client/auth';
 	import contentFormat from "../../utils/content-format";
     import copy from '../../utils/clipboard';
 
@@ -259,6 +259,7 @@
         created() {
         	usersClient.getAll('admins')
                 .then(response => {
+	                this.isTableLoading = false;
 	                this.adminUsersList = response.slice().map(user => {
 	                	return {
 	                		docId: user._id,
@@ -273,8 +274,9 @@
                         }
                     });
                 })
-                .catch(error => this.$message.error(error.message))
-                .finally(() => this.isTableLoading = false)
+                .catch(error => {
+	                this.$message.error(error.message)
+                })
         }
     }
 </script>

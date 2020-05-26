@@ -46,7 +46,7 @@
 
 <script>
     import validateRules from '../../plugins/validator/rules';
-    import authClient from '../../plugins/http-clients/auth';
+    import authClient from '../../plugins/http-client/auth';
 
     export default {
         name: "users-login",
@@ -89,7 +89,9 @@
 			            this.$message.success(`Авторизация успешна. \n Приветствую, ${ response.user.firstName }!`);
 			            this.$router.push('/dashboard');
 		            })
-		            .catch(error => this.$message.error(error.message))
+		            .catch(error => {
+			            this.$message.error(error.message)
+                    })
 		            .finally(() => this.isSubmitLoading = false);
             },
             openPasswordRestore() {

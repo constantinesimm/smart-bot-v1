@@ -19,19 +19,11 @@
 	export default {
 		name: 'main-header',
 		methods: {
-			dropdownHandler(command) {
-				this[command]();
-            },
-			getProfilePage() {
-				this.$router.push('/users/account');
-            },
 			signOut() {
-				this.$store.dispatch('auth/logout', { userId: this.$store.getters['auth/currentUser']._id})
-					.then(response => {
-						this.$message.success(response);
-						this.$router.push('/users/login');
-			        })
-					.catch(error => console.log(error.message));
+				this.$store.dispatch('auth/logout')
+					.then(response => this.$message.success(response))
+					.catch(error => console.log(error))
+                    .finally(() => this.$router.push('/users/login'));
 			}
 		}
 	}

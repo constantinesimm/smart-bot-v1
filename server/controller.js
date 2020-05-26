@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const cors = require('cors');
 
 const routes = {
 	auth: require('./modules/users/controllers/auth'),
@@ -18,3 +19,12 @@ module.exports = app => {
 		fs.createReadStream(filePath).pipe(res);
 	});
 };
+
+/*
+router.options('/initiateCall', function(req, res){
+    res.header('Access-Control-Allow-Origin', '*');  //allow access to current origin
+    res.header('Access-Control-Allow-Headers', 'Origin, Content-Type, Accept, x-route-guard');
+    res.header('Access-Control-Allow-Methods', 'POST, OPTIONS');
+    res.status(204).end();
+})
+ */

@@ -14,7 +14,7 @@ export default {
 	logout(data) {
 		return client.post(AUTH.LOGOUT, data)
 			.then(response => Promise.resolve(response.data))
-			.catch(error => Promise.reject(error.response.data));
+			.catch(error => Promise.reject(error))
 	},
 	
 	registerInvite(data) {

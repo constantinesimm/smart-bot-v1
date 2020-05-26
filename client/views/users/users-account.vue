@@ -103,7 +103,7 @@
 <script>
     import copy from '../../utils/clipboard';
     import validateRules from '../../plugins/validator/rules';
-    import usersClient from '../../plugins/http-clients/users';
+    import usersClient from '../../plugins/http-client/users';
     import contentFormat from '../../utils/content-format';
     export default {
         name: "users-account",

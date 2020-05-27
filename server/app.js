@@ -1,5 +1,3 @@
-if (process.env.NODE_ENV !== 'production') const cors = require('cors');
-
 const path = require('path');
 const helmet = require('helmet');
 const logger = require('morgan');
@@ -14,6 +12,10 @@ const setPassportAuthStrategy = require('./libs/authenticate/passport');
 /* Middleware */
 const setController = require('./controller');
 const setErrorHandler = require('./middleware/error-handler');
+
+if (process.env.NODE_ENV !== 'production') {
+	const cors = require('cors');
+}
 
 /* connect database */
 connectMongoDB();

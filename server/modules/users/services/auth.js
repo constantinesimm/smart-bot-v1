@@ -68,7 +68,8 @@ class AuthService {
 			lastName: user.lastName,
 			gender: user.gender,
 			phoneNumber: user.phoneNumber,
-			role: user.role
+			role: user.role,
+			birthday: user.birthday
 		}
 	}
 	
@@ -197,3 +198,4 @@ class AuthService {
 }
 
 module.exports = AuthService;
+

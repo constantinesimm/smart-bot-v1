@@ -15,22 +15,21 @@ Vue.component('admin-panel-layout', AdminPanelLayout);
 import router from './router';
 import store from './store';
 
-/* Libs and npm packages */
-import Axios from 'axios';
-import ls from './plugins/storage/secure-ls';
-
 /* Directives */
 import AwesomeMask from 'awesome-mask';
+
+/* Libs and Plugins */
+import locale from 'element-ui/lib/locale/lang/ru-RU'
 
 /* Styles */
 import 'element-ui/lib/theme-chalk/index.css';
 
 Vue.config.productionTip = process.env.NODE_ENV !== 'production';
 
-Vue.directive('mask', AwesomeMask);
-Vue.use(ElementUI);
-
 Vue.prototype.$eventHub = new Vue();
+
+Vue.directive('mask', AwesomeMask);
+Vue.use(ElementUI, { locale });
 
 new Vue({
   router,

@@ -15,6 +15,7 @@ const UserSchema = new Schema({
 		type: String,
 		set: v => v.replace(/[+\s()]/g, '')
 	},
+	birthday: Date,
 	role: {
 		type: String,
 		enum: ['manager', 'admin', 'super']

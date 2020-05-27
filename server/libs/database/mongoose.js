@@ -5,6 +5,6 @@ const mongoUriConnection = process.env.NODE_ENV === 'production' ? mongo.uri.pro
 module.exports = () => {
 	return mongoose
 		.connect(mongoUriConnection, mongo.options)
-		.then(() => console.log('Application Database(mongoDB) connected'))
-		.catch(error => console.log(`Application Database(mongoDB) connection error - ${ error }`));
+		.then(() => console.info('♦♦♦♦♦ Database(mongoDB) connected ♦♦♦♦♦'))
+		.catch(error => console.error(`♦♦♦♦♦ Database(mongoDB) error - ${ error.message } ♦♦♦♦♦`));
 };

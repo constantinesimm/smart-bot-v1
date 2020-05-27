@@ -3,23 +3,19 @@
         <div slot="header">
             <el-page-header @back="goBack" title="На главную" content="Сотрудники"></el-page-header>
             <div class="card-header__options">
-                <el-form v-if="this.$store.getters['auth/currentUser'].role !== 'manager'"
-                         :model="userInviteForm" :rules="rules"
-                         ref="userInviteForm" size="small">
+                <el-form v-if="this.$store.getters['auth/currentUser'].role !== 'manager'" :model="userInviteForm" :rules="rules" ref="userInviteForm" size="small">
+
                     <el-form-item prop="role">
-                        <el-select  v-model="userInviteForm.role" size="mini"
-                                    v-on:visible-change="validateFieldOnInput('userInviteForm', 'formFieldsValid', 'role')"
-                                    placeholder="Выберите роль" style="width:135px">
+                        <el-select  v-model="userInviteForm.role" size="mini" placeholder="Выберите роль" style="width:135px">
                             <el-option label="Менеджер" value="manager"/>
                             <el-option label="Администратор" value="admin"/>
                         </el-select>
                     </el-form-item>
-                    <el-form-item prop="email">
-                        <el-input placeholder="Введите email" v-model="userInviteForm.email"
-                                  v-on:input="validateFieldOnInput('userInviteForm', 'formFieldsValid', 'email')"
-                                  class="input-with-select" size="mini">
-                        </el-input>
+
+                    <el-form-item prop="email" style="margin: auto 5px">
+                        <el-input placeholder="Введите email" v-model="userInviteForm.email" class="input-with-select" size="mini" />
                     </el-form-item>
+
                     <el-form-item>
                         <el-button @click="submitUserInviteForm" :loading="isSubmitLoading" icon="fas fa-user-plus" type="primary" size="mini" plain>
                             Пригласить
@@ -45,7 +41,9 @@
                             <!-- isVerified true tooltip -->
                             <el-tooltip v-if="scope.row.isVerified" placement="top">
                                 <div slot="content">
-                                    <span style="color: #67c23a;font-weight: bold">Регистрация завершена</span>
+
+                                    <span>Дата регистрации: </span><span style="color: #67c23a;font-weight: bold">{{ new Date( parseInt( scope.row.docId.substring(0,8), 16 ) * 1000 ).toLocaleDateString() }}</span><br>
+                                    <span>Статус: </span><span style="color: #67c23a;font-weight: bold">Регистрация завершена</span>
                                 </div>
                                 <span><i class="fas fa-user-check"></i> Активный</span>
                             </el-tooltip>
@@ -53,19 +51,11 @@
                             <!-- isVerified false tooltip -->
                             <el-tooltip v-else placement="top">
                                 <div slot="content">
-                                    <span style="color: #f56c6c;font-weight: bold">Email не подтверждён</span>
+                                    <span>Дата регистрации: </span><span style="color: #f56c6c;font-weight: bold">{{ new Date( parseInt( scope.row.docId.substring(0,8), 16 ) * 1000 ).toLocaleDateString() }}</span><br>
+                                    <span>Статус: </span><span style="color: #f56c6c;font-weight: bold">Email не подтверждён</span>
                                 </div>
                                 <span><i class="fas fa-user-times"></i> Не активный</span>
                             </el-tooltip>
-                        </el-tag>
-                    </template>
-                </el-table-column>
-
-                <!-- register date table column -->
-                <el-table-column label="Зарегистрирован" align="center" width="150px">
-                    <template slot-scope="scope">
-                        <el-tag type="primary">
-                            {{ new Date( parseInt( scope.row.docId.substring(0,8), 16 ) * 1000 ).toLocaleDateString() }}
                         </el-tag>
                     </template>
                 </el-table-column>
@@ -88,7 +78,7 @@
                 </el-table-column>
 
                 <!-- email table column -->
-                <el-table-column prop="email" sortable label="Email" align="center">
+                <el-table-column prop="email" sortable label="Email" align="center" min-width="300px">
                     <template slot-scope="scope">
                         <el-link :underline="false" :href="`mailto:${ scope.row.email }`">
                             <el-tooltip placement="top" content="Написать email">
@@ -127,11 +117,20 @@
                     </template>
                 </el-table-column>
 
+                <!-- birthday table column -->
+                <el-table-column label="Дата рождения" align="center" width="135px">
+                    <template slot-scope="scope">
+                        <el-tag :type="scope.row.birthday === 'н/д' ? 'danger' : 'info'">
+                            {{ `${new Date(scope.row.birthday).getDate()}.${new Date(scope.row.birthday).getMonth()+1}.${new Date(scope.row.birthday).getFullYear()}` }}
+                        </el-tag>
+                    </template>
+                </el-table-column>
+
                 <!-- role table column -->
                 <el-table-column v-if="this.$store.getters['auth/currentUser'].role !== 'manager'" label="Уровень прав" align="center" width="150px">
                     <template slot-scope="scope">
                         <template v-if="scope.row.edit">
-                            <el-select  v-model="scope.row.role" size="mini" placeholder="Выберите роль" style="width:135px">
+                            <el-select v-model="scope.row.role" size="mini" placeholder="Выберите роль" style="width:135px">
                                 <el-option label="Менеджер" value="manager"/>
                                 <el-option label="Администратор" value="admin"/>
                             </el-select>
@@ -142,7 +141,7 @@
                     </template>
                 </el-table-column>
 
-                <!-- user actions table column -->
+                <!-- users actions table column -->
                 <el-table-column v-if="this.$store.getters['auth/currentUser'].role !== 'manager'" label="Действия" align="center" width="200px">
                     <template slot-scope="scope">
                         <el-tooltip v-if="!scope.row.edit" placement="top" content="Редактировать пользователя">
@@ -178,24 +177,15 @@
 			        email: validateRules.email,
 			        role: { required: true, message: 'Выберите роль пользователя' }
 		        },
+		        adminUsersList: [],
+		        usersListSearch: '',
 		        userInviteForm: {
 			        role: '',
 			        email: ''
 		        },
-		        formFieldsValid: {
-			        role: false,
-			        email: false
-                },
-                adminUsersList: [],
-                usersListSearch: '',
 		        isSubmitLoading: false,
 		        isTableLoading: true
             }
-        },
-        computed: {
-	        checkFormFields: function () {
-		        return Object.keys(this.formFieldsValid).every(key => !!this.formFieldsValid[key])
-	        }
         },
         methods: {
         	goBack() {
@@ -204,52 +194,48 @@
             handleCopy(text, event) {
         		copy(text, event)
             },
-        	validateFieldOnInput(refKey, field, prop) {
-        		return this.$refs[refKey].validateField(prop, errorMessage => this[field][prop] = !errorMessage.length)
-            },
             submitUserInviteForm() {
-	            if (!this.checkFormFields) return this.$refs.userInviteForm.validate(valid => valid);
+	            this.$refs.userInviteForm.validate(valid => {
+	            	if (valid) {
+			            this.isSubmitLoading = true;
 
-                this.isSubmitLoading = true;
-	            authClient.registerInvite(this.userInviteForm)
-                    .then(response => {
-	                    this.adminUsersList.push({
-		                    docId: response.user._id,
-		                    userId: response.user.userId,
-		                    email: response.user.email,
-		                    phoneNumber: 'н/д',
-		                    fullName: 'н/д',
-		                    gender: 'н/д',
-		                    role: response.user.role,
-		                    isVerified: response.user.isVerified,
-		                    edit: false
-	                    });
+			            authClient.registerInvite(this.userInviteForm)
+				            .then(response => {
+					            this.adminUsersList.push({
+						            docId: response.user._id,
+						            userId: response.user.userId,
+						            email: response.user.email,
+						            phoneNumber: 'н/д',
+						            fullName: 'н/д',
+						            gender: 'н/д',
+						            birthday: 'н/д',
+						            role: response.user.role,
+						            isVerified: response.user.isVerified,
+						            edit: false
+					            });
 
-	                    this.$message.success(response.message);
-                    })
-                    .catch(error => this.$message.error(error.message))
-                    .finally(() => this.isSubmitLoading = false)
+					            this.$message.success(response.message);
+				            })
+				            .catch(error => this.$message.error(error.message))
+				            .finally(() => this.isSubmitLoading = false)
+                    } else return false;
+                });
         	},
             removeEmployer(index, rows, docId) {
-        		if (docId === this.$store.getters['auth/currentUser']._id) {
-        			this.$notify.error('Вы не можете удалить сами себя');
-                } else {
-
+        		if (docId === this.$store.getters['auth/currentUser']._id) this.$notify.error('Вы не можете удалить сами себя');
+        		else {
 			        usersClient.employeeRemove(docId, { email: rows[index].email })
 				        .then(response => {
 					        this.$notify.success(response.message);
 					        rows.splice(index, 1);
 				        })
-				        .catch(error => this.$notify.error(error.message));
-                }
-
+                        .catch(error => this.$notify.error(error.message));
+                };
             },
             editEmployer(index, rows, docId) {
 	            rows[index].edit = !rows[index].edit;
 
-	            const data = {
-	            	role: rows[index].role
-                };
+	            const data = { role: rows[index].role };
 
 	            usersClient.employeeEdit(docId, data)
                     .then(response => this.$notify.success(response.message))
@@ -260,6 +246,7 @@
         	usersClient.getAll('admins')
                 .then(response => {
 	                this.isTableLoading = false;
+
 	                this.adminUsersList = response.slice().map(user => {
 	                	return {
 	                		docId: user._id,
@@ -268,15 +255,14 @@
                             phoneNumber: user.phoneNumber ? contentFormat.phone(user.phoneNumber) : 'н/д',
                             fullName: user.firstName && user.lastName ? `${ user.firstName } ${ user.lastName }` : 'н/д',
                             gender: user.gender ? user.gender : 'н/д',
+                            birthday: user.birthday ? user.birthday : 'н/д',
                             role: user.role,
                             isVerified: user.isVerified,
                             edit: false
                         }
                     });
                 })
-                .catch(error => {
-	                this.$message.error(error.message)
-                })
+                .catch(error => this.$message.error(error.message));
         }
     }
 </script>

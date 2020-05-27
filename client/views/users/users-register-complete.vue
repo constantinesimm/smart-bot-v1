@@ -2,8 +2,7 @@
     <el-row type="flex" justify="center" class="el-page-row">
         <el-col :span="24">
             <transition name="el-zoom-in-center">
-                <el-form v-show="!this.isFormLoading" :model="registerForm" :rules="rules"
-                         :loading="this.isFormLoading" ref="registerForm" size="small">
+                <el-form v-show="!this.isFormLoading" :model="registerForm" :rules="rules" :loading="this.isFormLoading" ref="registerForm" size="small">
                     <el-form-item class="el-form-item__header">
                         <img class="el-form-item__logo" src="/img/logo/rice_logo.png"/>
                     </el-form-item>
@@ -14,12 +13,12 @@
                         <el-row class="el-form-group__row">
                             <el-col :span="6">
                                 <el-form-item label="User ID" prop="userId">
-                                    <el-input v-model="registerForm.userId" v-on:input="submitForm" :disabled="true" readonly/>
+                                    <el-input v-model="registerForm.userId" :disabled="true" readonly/>
                                 </el-form-item>
                             </el-col>
                             <el-col :span="16">
                                 <el-form-item label="Email" prop="email">
-                                    <el-input v-model="registerForm.email" v-on:input="submitForm" :disabled="true" readonly/>
+                                    <el-input v-model="registerForm.email" :disabled="true" readonly/>
                                 </el-form-item>
                             </el-col>
                         </el-row>
@@ -28,16 +27,14 @@
                             <el-col :span="11">
                                 <el-form-item label="Имя" prop="firstName" @keypress.enter.native="submitForm">
 
-                                    <el-input v-model="registerForm.firstName" maxlength="20" show-word-limit placeholder="Пример: Василий"
-                                              v-on:input="validateFieldOnInput('registerForm', 'formFieldsValid', 'firstName')"/>
+                                    <el-input v-model="registerForm.firstName" maxlength="20" show-word-limit placeholder="Пример: Василий" />
 
                                 </el-form-item>
                             </el-col>
                             <el-col :span="11">
                                 <el-form-item label="Фамилия" prop="lastName" @keypress.enter.native="submitForm">
 
-                                    <el-input v-model="registerForm.lastName" maxlength="20" show-word-limit placeholder="Пример: Васильев"
-                                              v-on:input="validateFieldOnInput('registerForm', 'formFieldsValid', 'lastName')" />
+                                    <el-input v-model="registerForm.lastName" maxlength="20" show-word-limit placeholder="Пример: Васильев" />
 
                                 </el-form-item>
                             </el-col>
@@ -47,8 +44,7 @@
                             <el-col :span="8">
                                 <el-form-item label="Пол" prop="gender">
 
-                                    <el-select v-model="registerForm.gender" placeholder="Пол"
-                                               v-on:visible-change="validateFieldOnInput('registerForm', 'formFieldsValid', 'gender')">
+                                    <el-select v-model="registerForm.gender" placeholder="Пол">
                                         <el-option label="Мужчина" value="male"/>
                                         <el-option label="Женщина" value="female"/>
                                     </el-select>
@@ -57,8 +53,7 @@
                             </el-col>
                             <el-col :span="14">
                                 <el-form-item label="Телефон" prop="phoneNumber" @keypress.enter.native="submitForm">
-                                    <el-input v-model="registerForm.phoneNumber" v-mask="'+99 (999) 999 99 99'" placeholder="Пример: 380671112233"
-                                              v-on:input="validateFieldOnInput('registerForm', 'formFieldsValid', 'phoneNumber')"/>
+                                    <el-input v-model="registerForm.phoneNumber" v-mask="'+99 (999) 999 99 99'" placeholder="Пример: 380671112233" />
                                 </el-form-item>
                             </el-col>
                         </el-row>
@@ -67,24 +62,21 @@
                             <el-col :span="11">
                                 <el-form-item label="Пароль" prop="secret" @keypress.enter.native="submitForm">
 
-                                    <el-input v-model="registerForm.secret" show-password placeholder="Пример: Example1"
-                                              v-on:input="validateFieldOnInput('registerForm', 'formFieldsValid', 'secret')" />
+                                    <el-input v-model="registerForm.secret" show-password placeholder="Пример: Example1" />
 
                                 </el-form-item>
                             </el-col>
                             <el-col :span="11">
                                 <el-form-item label="Подтвердить" prop="secretConfirm" @keypress.enter.native="submitForm">
 
-                                    <el-input v-model="registerForm.secretConfirm" show-password placeholder="Пример: Example1"
-                                              v-on:input="validateFieldOnInput('registerForm','formFieldsValid', 'secretConfirm')"/>
+                                    <el-input v-model="registerForm.secretConfirm" show-password placeholder="Пример: Example1" />
 
                                 </el-form-item>
                             </el-col>
                         </el-row>
 
                         <el-form-item class="el-form-item__submit">
-                            <el-button v-on:click="submitForm" :loading="this.isSubmitLoading" :disabled="!this.checkFormFields" type="primary" size="medium" plain>
-                                <i class="fas fa-user-check" v-if="!this.isSubmitLoading"></i>
+                            <el-button v-on:click="submitForm" :loading="this.isSubmitLoading" icon="fas fa-user-check" type="primary" size="medium" plain>
                                 Регистрация
                             </el-button>
                         </el-form-item>
@@ -138,14 +130,6 @@
                     secret: '',
                     secretConfirm: ''
                 },
-                formFieldsValid: {
-                    firstName: false,
-                    lastName: false,
-                    gender: false,
-                    phoneNumber: false,
-                    secret: false,
-                    secretConfirm: false
-                },
                 isSubmitLoading: false,
                 isFormLoading: true,
                 errorMessage: ''
@@ -163,33 +147,22 @@
 		            this.$router.push('/users/login');
 	            })
         },
-        computed: {
-            checkFormFields: function () {
-                return Object.keys(this.formFieldsValid).every(key => !!this.formFieldsValid[key])
-            }
-        },
         methods: {
-            validateFieldOnInput(refKey, field, prop) {
-                return this.$refs[refKey].validateField(prop, errorMessage => this[field][prop] = !errorMessage.length)
-            },
             submitForm() {
-                if (!this.checkFormFields) return this.$refs.registerForm.validate(valid => valid);
-                else {
-                    this.isSubmitLoading = true;
+                this.$refs.registerForm.validate(valid => {
+                	if (valid) {
+		                this.isSubmitLoading = true;
 
-                    authClient.registerComplete(this.registerForm)
-                        .then(response => {
-	                        console.log(response)
-	                        this.$message.success(response);
+		                authClient.registerComplete(this.registerForm)
+			                .then(response => {
+				                this.$message.success(response);
 
-	                        this.$router.push('/users/login');
-                        })
-                        .catch(error => {
-	                        console.log(error)
-	                        this.$message.error(error.message)
-                        })
-                        .finally(() => this.isSubmitLoading = false)
-                }
+				                this.$router.push('/users/login');
+			                })
+			                .catch(error => this.$message.error(error.message))
+			                .finally(() => this.isSubmitLoading = false)
+                    } else return false;
+                });
             }
         }
     }

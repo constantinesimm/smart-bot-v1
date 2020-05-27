@@ -7,10 +7,8 @@
             </el-link>
         </el-col>
         <el-col>
-            <el-link :underline="false" href="/users/account">
-                <el-button type="primary" size="mini" icon="fas fa-user-circle" plain>Аккаут</el-button>
-            </el-link>
-            <el-button @click="signOut" type="primary" size="mini" icon="fas fa-power-off" plain>Выход</el-button>
+            <el-button @click="pushUserAccountPage" type="text" size="mini" icon="fas fa-user-cog"> Настройки аккаута</el-button>
+            <el-button @click="signOut" type="danger" size="mini" icon="fas fa-power-off" plain> Выход</el-button>
         </el-col>
     </el-header>
 </template>
@@ -19,6 +17,9 @@
 	export default {
 		name: 'main-header',
 		methods: {
+			pushUserAccountPage() {
+				this.$router.push('/users/account')
+            },
 			signOut() {
 				this.$store.dispatch('auth/logout')
 					.then(response => this.$message.success(response))

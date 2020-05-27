@@ -6,8 +6,8 @@ import {
 
 const validateRules = {
     email: [
-        {required: true, message: 'Введите email'},
-        {type: 'email', message: 'Некорректный формат поля "E-mail"'}
+        { required: true, message: 'Введите email' },
+        { type: 'email', message: 'Некорректный формат поля "E-mail"' }
     ],
     firstName: [
         { required: true, message: 'Введите имя' },

@@ -1,7 +1,7 @@
 import Axios from 'axios';
+import router from "../../router";
 import { AUTH } from "../../config/constants/endpoints";
 import authClient from '../../plugins/http-client/auth';
-import router from "../../router";
 
 let state = {
 	status: '',
@@ -43,7 +43,7 @@ const actions = {
 		return new Promise((resolve, reject) => {
 			commit('auth_request');
 			
-			Axios.post(AUTH.BASE_URL + AUTH.LOGIN, payload)
+			Axios.post(AUTH.LOGIN, payload)
 				.then(response => {
 					commit('auth_success', response.data);
 					

@@ -1,7 +1,6 @@
 import Axios from 'axios';
 import Raven from 'raven-js';
 import store from '../../store';
-import router from '../../router';
 
 const getClient = (baseUrl = null) => {
 	let options = {

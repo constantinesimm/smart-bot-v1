@@ -1,7 +1,7 @@
 import { ApiClient } from './client';
 import { AUTH } from "../../config/constants/endpoints";
 
-const client = new ApiClient(AUTH.BASE_URL);
+const client = new ApiClient();
 
 export default {
 	

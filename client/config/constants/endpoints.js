@@ -1,26 +1,20 @@
-const appUrl = process.env.NODE_ENV === 'production' ? process.env.APP_HOST : 'http://localhost:3000';
+const appUrl = process.env.NODE_ENV === 'production' ? `${window.location.origin}/api` : 'http://localhost:3000/api';
 
 const AUTH = {
-	LOGIN: '/authenticate',
-	LOGOUT: '/logout',
-	REG_INVITE: '/register/invite',
-	REG_COMPLETE: '/register/complete',
-	PASS_RESTORE_INVITE: '/password/restore/invite',
-	PASS_RESTORE_COMPLETE: '/password/restore/complete',
-	CHECK_TOKEN: '/check/token/',
-	get BASE_URL() {
-		return `${ appUrl }/api/auth`
-	},
+	LOGIN: `${ appUrl }/auth/authenticate`,
+	LOGOUT: `${ appUrl }/auth/logout`,
+	REG_INVITE: `${ appUrl }/auth/register/invite`,
+	REG_COMPLETE: `${ appUrl }/auth/register/complete`,
+	PASS_RESTORE_INVITE: `${ appUrl }/auth/password/restore/invite`,
+	PASS_RESTORE_COMPLETE: `${ appUrl }/auth/password/restore/complete`,
+	CHECK_TOKEN: `${ appUrl }/auth/check/token/`
 };
 
 const USERS = {
-	EDIT: '/employee/edit',
-	REMOVE: '/employee/remove',
-	GET_ADMINS: '/admins/all',
-	GET_CLIENTS: '/clients/all',
-	get BASE_URL() {
-		return `${ appUrl }/api/users`
-	},
+	EDIT: `${ appUrl }/users/employee/edit`,
+	REMOVE: `${ appUrl }/users/employee/remove`,
+	GET_ADMINS: `${ appUrl }/users/admins/all`,
+	GET_CLIENTS: `${ appUrl }/users/clients/all`,
 };
 
 export { AUTH, USERS };

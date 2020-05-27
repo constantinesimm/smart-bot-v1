@@ -42,7 +42,7 @@ const actions = {
 	login({ commit }, payload) {
 		return new Promise((resolve, reject) => {
 			commit('auth_request');
-			
+			console.log('login({ commit }', AUTH.LOGIN, process.env.APP_ADDR, process.env.NODE_ENV )
 			Axios.post(AUTH.LOGIN, payload)
 				.then(response => {
 					commit('auth_success', response.data);

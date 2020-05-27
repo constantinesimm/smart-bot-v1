@@ -1,4 +1,3 @@
-const path = require('path');
 const helmet = require('helmet');
 const logger = require('morgan');
 const express = require('express');
@@ -38,9 +37,6 @@ app
 app
 	.use(bodyParser.json())
 	.use(bodyParser.urlencoded({ extended: true }));
-
-/* static path */
-app.use(express.static(path.join(__dirname, '../dist')));
 
 /* set passport.js authentication */
 app.use(passport.initialize());

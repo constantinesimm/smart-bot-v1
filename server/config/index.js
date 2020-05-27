@@ -1,9 +1,11 @@
 const path = require('path');
-const dotenv = require('dotenv');
-
-dotenv.config({
-	path: path.join(__dirname + '/../../.env')
-});
+if (process.env.NODE_ENV !== 'production') {
+	const dotenv = require('dotenv');
+	
+	dotenv.config({
+		path: path.join(__dirname + '/../../.env')
+	});
+}
 
 module.exports = {
 	secretString: process.env.CONTROL_STRING,

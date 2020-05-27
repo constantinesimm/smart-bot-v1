@@ -1,4 +1,4 @@
-const appUrl = process.env.NODE_ENV === 'production' ? `${ window.location.origin }` : 'http://localhost:3000';
+const appUrl = process.env.NODE_ENV === 'production' ? process.env.APP_HOST : 'http://localhost:3000';
 
 const AUTH = {
 	LOGIN: '/authenticate',

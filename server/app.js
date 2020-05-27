@@ -1,4 +1,5 @@
-const cors = require('cors');
+if (process.env.NODE_ENV !== 'production') const cors = require('cors');
+
 const path = require('path');
 const helmet = require('helmet');
 const logger = require('morgan');

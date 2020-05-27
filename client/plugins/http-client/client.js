@@ -1,5 +1,4 @@
 import Axios from 'axios';
-import Raven from 'raven-js';
 import store from '../../store';
 
 const getClient = (baseUrl = null) => {
@@ -22,11 +21,6 @@ const getClient = (baseUrl = null) => {
 				return requestConfig;
 			}
 			return requestConfig
-		},
-		(requestError) => {
-			Raven.captureException(requestError);
-			
-			return Promise.reject(requestError);
 		}
 	);
 	
@@ -38,10 +32,6 @@ const getClient = (baseUrl = null) => {
 				store.dispatch('auth/err_logout', error);
 				
 				return Promise.reject(error);
-			}
-			
-			if (error.response.status >= 500) {
-				Raven.captureException(error);
 			}
 			
 			return Promise.reject(error);

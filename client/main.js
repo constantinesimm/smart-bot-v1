@@ -18,15 +18,18 @@ import store from './store';
 /* Directives */
 import AwesomeMask from 'awesome-mask';
 
+/* Libs and Plugins */
+import locale from 'element-ui/lib/locale/lang/ru-RU'
+
 /* Styles */
 import 'element-ui/lib/theme-chalk/index.css';
 
 Vue.config.productionTip = process.env.NODE_ENV !== 'production';
 
-Vue.directive('mask', AwesomeMask);
-Vue.use(ElementUI);
-
 Vue.prototype.$eventHub = new Vue();
+
+Vue.directive('mask', AwesomeMask);
+Vue.use(ElementUI, { locale });
 
 new Vue({
   router,

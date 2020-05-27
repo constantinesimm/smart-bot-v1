@@ -23,6 +23,12 @@ body {
 /* messages */
 .el-message {
     top: 5px!important;
+    justify-content: center;
+}
+
+/* notifications */
+.el-notification {
+    top: 60px!important;
 }
 
 /* header logo */

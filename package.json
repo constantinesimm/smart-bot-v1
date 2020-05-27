@@ -13,6 +13,9 @@
     "postinstall": "npm run build"
   },
   "dependencies": {
+    "ajv": "^6.12.2",
+    "ajv-errors": "^1.0.1",
+    "ajv-keywords": "^3.4.1",
     "awesome-mask": "^1.1.1",
     "axios": "^0.19.2",
     "bcryptjs": "^2.4.3",

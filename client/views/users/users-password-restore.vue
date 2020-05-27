@@ -2,8 +2,7 @@
     <el-row type="flex" justify="center" class="el-page-row">
         <el-col :span="24">
             <transition name="el-zoom-in-center">
-                <el-form v-show="!this.isFormLoading" :model="passwordRestoreForm" :rules="rules"
-                         :loading="this.isFormLoading" ref="passwordRestoreForm" size="small">
+                <el-form v-show="!this.isFormLoading" :model="passwordRestoreForm" :rules="rules" :loading="this.isFormLoading" ref="passwordRestoreForm" size="small">
                     <el-form-item class="el-form-item__header">
                         <img class="el-form-item__logo" src="/img/logo/rice_logo.png"/>
                     </el-form-item>
@@ -27,8 +26,7 @@
                             <el-col :span="24">
                                 <el-form-item label="Пароль" prop="secret" @keypress.enter.native="submitForm">
 
-                                    <el-input v-model="passwordRestoreForm.secret" show-password placeholder="Пример: Example1"
-                                              v-on:input="validateFieldOnInput('passwordRestoreForm', 'formFieldsValid', 'secret')" />
+                                    <el-input v-model="passwordRestoreForm.secret" show-password placeholder="Пример: Example1" />
 
                                 </el-form-item>
                             </el-col>
@@ -37,15 +35,13 @@
                             <el-col :span="24">
                                 <el-form-item label="Подтверждение пароля" prop="secretConfirm" @keypress.enter.native="submitForm">
 
-                                    <el-input v-model="passwordRestoreForm.secretConfirm" show-password placeholder="Пример: Example1"
-                                              v-on:input="validateFieldOnInput('passwordRestoreForm','formFieldsValid', 'secretConfirm')"/>
+                                    <el-input v-model="passwordRestoreForm.secretConfirm" show-password placeholder="Пример: Example1"/>
 
                                 </el-form-item>
                             </el-col>
                         </el-row>
                         <el-form-item class="el-form-item__submit">
-                            <el-button v-on:click="submitForm" :loading="this.isSubmitLoading" :disabled="!this.checkFormFields" type="success" size="medium" plain>
-                                <i class="fas fa-user-check" v-if="!this.isSubmitLoading"></i>
+                            <el-button v-on:click="submitForm" :loading="this.isSubmitLoading" icon="fas fa-user-check" type="success" size="medium" plain>
                                 Обновить пароль
                             </el-button>
                         </el-form-item>
@@ -68,7 +64,7 @@
 
 <script>
 	import validateRules from '../../plugins/validator/rules';
-	import authClient from '../../plugins/http-clients/auth';
+	import authClient from '../../plugins/http-client/auth';
 
 	export default {
 		name: 'users-password-restore',
@@ -91,10 +87,6 @@
 			        secret: '',
 			        secretConfirm: ''
 		        },
-		        formFieldsValid: {
-			        secret: false,
-			        secretConfirm: false
-		        },
 		        isSubmitLoading: false,
 		        isFormLoading: true,
             }
@@ -111,29 +103,22 @@
 					this.$router.push('/users/login');
 				})
 		},
-		computed: {
-			checkFormFields: function () {
-				return Object.keys(this.formFieldsValid).every(key => !!this.formFieldsValid[key])
-			}
-		},
 		methods: {
-			validateFieldOnInput(refKey, field, prop) {
-				return this.$refs[refKey].validateField(prop, errorMessage => this[field][prop] = !errorMessage.length)
-			},
 			submitForm() {
-				if (!this.checkFormFields) return this.$refs.passwordRestoreForm.validate(valid => valid);
-				else {
-					this.isSubmitLoading = true;
+				this.$refs.passwordRestoreForm.validate(valid => {
+					if (valid) {
+						this.isSubmitLoading = true;
 
-					authClient.passwordRestoreComplete(this.passwordRestoreForm)
-                        .then(response => {
-	                        this.$message.success(response.message);
+						authClient.passwordRestoreComplete(this.passwordRestoreForm)
+							.then(response => {
+								this.$message.success(response.message);
 
-	                        this.$router.push('/users/login');
-                        })
-                        .catch(error => this.$message.error(error.message))
-                        .finally(() => this.isSubmitLoading = false)
-				}
+								this.$router.push('/users/login');
+							})
+							.catch(error => this.$message.error(error.message))
+							.finally(() => this.isSubmitLoading = false)
+                    } else return false;
+                });
 			}
 		}
 	}

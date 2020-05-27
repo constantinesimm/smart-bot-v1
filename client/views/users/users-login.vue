@@ -11,21 +11,18 @@
 
                     <el-form-item label="E-mail" prop="email" @keypress.enter.native="submitForm">
 
-                        <el-input v-model="loginForm.email" placeholder="Пример: example@gmail.com"
-                                  v-on:input="validateFieldOnInput('loginForm', 'formFieldsValid', 'email')"/>
+                        <el-input v-model="loginForm.email" placeholder="Пример: example@gmail.com"/>
 
                     </el-form-item>
 
                     <el-form-item label="Пароль" prop="secret" @keypress.enter.native="submitForm">
 
-                        <el-input v-model="loginForm.secret"  placeholder="Пример: Example1" show-password
-                                  v-on:input="validateFieldOnInput('loginForm', 'formFieldsValid', 'secret')"/>
+                        <el-input v-model="loginForm.secret"  placeholder="Пример: Example1" show-password/>
 
                     </el-form-item>
 
                     <el-form-item class="el-form-item__submit">
-                        <el-button @click="submitForm" :loading="this.isSubmitLoading" :disabled="!checkFormFields" type="primary" size="medium" plain>
-                            <i class="fas fa-sign-in-alt" v-if="!this.isSubmitLoading"></i>
+                        <el-button @click="submitForm" :loading="this.isSubmitLoading" icon="fas fa-sign-in-alt" type="primary" size="medium" plain>
                             Авторизация
                         </el-button>
                     </el-form-item>
@@ -33,8 +30,7 @@
                     <el-divider class="el-form-item__bottom-divider"/>
 
                     <el-form-item class="el-form-item__footer">
-                        <el-button @click="openPasswordRestore" type="text" size="medium">
-                            <i class="far fa-life-ring"></i>
+                        <el-button @click="openPasswordRestore" icon="far fa-life-ring" type="text" size="medium">
                             Забыл пароль?
                         </el-button>
                     </el-form-item>
@@ -46,13 +42,13 @@
 
 <script>
     import validateRules from '../../plugins/validator/rules';
-    import authClient from '../../plugins/http-clients/auth';
+    import authClient from '../../plugins/http-client/auth';
 
     export default {
         name: "users-login",
         data() {
             return {
-                //form fields validator rules
+                //form fields validate rules
                 rules: {
                     email: validateRules.email,
                     secret: validateRules.secret
@@ -62,35 +58,25 @@
                     email: '',
                     secret: ''
                 },
-                formFieldsValid: {
-                    email: false,
-                    secret: false
-                },
 	            isSubmitLoading: false
             }
         },
-        computed: {
-            checkFormFields: function () {
-                return Object.keys(this.formFieldsValid).every(key => !!this.formFieldsValid[key])
-            }
-        },
         methods: {
-            validateFieldOnInput(refKey, field, prop) {
-                return this.$refs[refKey].validateField(prop, errorMessage => this[field][prop] = !errorMessage.length)
-            },
             //form submit action by click and enter keypress
             submitForm() {
-                if (!this.checkFormFields) return this.$refs.loginForm.validate(valid => valid);
+                this.$refs.loginForm.validate(valid => {
+                	if (valid) {
+		                this.isSubmitLoading = true;
 
-	            this.isSubmitLoading = true;
-
-	            this.$store.dispatch('auth/login', this.loginForm)
-		            .then(response => {
-			            this.$message.success(`Авторизация успешна. \n Приветствую, ${ response.user.firstName }!`);
-			            this.$router.push('/dashboard');
-		            })
-		            .catch(error => this.$message.error(error.message))
-		            .finally(() => this.isSubmitLoading = false);
+		                this.$store.dispatch('auth/login', this.loginForm)
+			                .then(response => {
+				                this.$message.success(`Приветствую, ${ response.user.firstName }!`);
+				                this.$router.push('/dashboard');
+			                })
+			                .catch(error => this.$message.error(error.message))
+			                .finally(() => this.isSubmitLoading = false);
+                    } else return false;
+                });
             },
             openPasswordRestore() {
                 this.$prompt('Введите ваш e-mail', 'Забыл пароль?', {
@@ -106,8 +92,7 @@
 	                    setTimeout(() => this.openPasswordRestore(), 2000)
                     });
             }
-        },
-
+        }
     }
 </script>
 

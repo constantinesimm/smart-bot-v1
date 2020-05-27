@@ -21,7 +21,11 @@ const app = express();
 
 /* NODE_ENV=dev middleware */
 if (process.env.NODE_ENV !== 'production') {
-	app.use(cors( { origin: 'http://localhost:8080' }))
+	app.use(cors( {
+		'Access-Control-Allow-Origin': 'http://localhost:3000',
+		'Access-Control-Allow-Headers': 'Origin, Content-Type, Accept, Authorization',
+		'Access-Control-Allow-Methods': 'POST, OPTIONS'
+	}));
 	app.use(logger('dev'));
 }
 
@@ -34,7 +38,7 @@ app
 /* Request body parser middleware */
 app
 	.use(bodyParser.json())
-	.use(bodyParser.urlencoded({ extended: false }));
+	.use(bodyParser.urlencoded({ extended: true }));
 
 /* static path */
 app.use(express.static(path.join(__dirname, '../dist')));

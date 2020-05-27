@@ -6,7 +6,7 @@ class UserService {
 	static getAll() {
 		return new Promise((resolve, reject) => {
 			AdminModel.find({},
-				{ _id: 1, userId: 1, email: 1, firstName: 1, lastName: 1, gender: 1, phoneNumber: 1, role: 1, isVerified: 1 },
+				{ _id: 1, userId: 1, email: 1, firstName: 1, lastName: 1, gender: 1, phoneNumber: 1, birthday: 1, role: 1, isVerified: 1 },
 				(error, users) => {
 					if (error) return reject({ status: 500, message: error.message });
 					

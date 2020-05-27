@@ -14,9 +14,9 @@ const validatePassword = (rule, value, callback) => {
 };
 
 const validateCyrillicNames = (rule, value, callback) => {
-    const reCyrillicLetters = /[a-zA-ZА-Яа-яЁёЇїІіЄєҐґ]/g;
+    const reCyrillicLetters = /^[А-Яа-яЁёЇїІіЄєҐґ]{4,20}$/;
 
-    return reCyrillicLetters.test(value) ? callback() : callback('Поле может содержать только буквы(кириллица или латиница)')
+    return reCyrillicLetters.test(value) ? callback() : callback('Поле может содержать только буквы кириллицы (Укр/Рус)')
 };
 
 const validatePhoneNumber = (rule, value, callback) => {

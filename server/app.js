@@ -13,10 +13,6 @@ const setPassportAuthStrategy = require('./libs/authenticate/passport');
 const setController = require('./controller');
 const setErrorHandler = require('./middleware/error-handler');
 
-if (process.env.NODE_ENV !== 'production') {
-	const cors = require('cors');
-}
-
 /* connect database */
 connectMongoDB();
 
@@ -24,7 +20,7 @@ const app = express();
 
 /* NODE_ENV=dev middleware */
 if (process.env.NODE_ENV !== 'production') {
-	app.use(cors( {
+	app.use(require('cors')({
 		'Access-Control-Allow-Origin': 'http://localhost:3000',
 		'Access-Control-Allow-Headers': 'Origin, Content-Type, Accept, Authorization',
 		'Access-Control-Allow-Methods': 'POST, OPTIONS'

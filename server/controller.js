@@ -1,6 +1,5 @@
 const fs = require('fs');
 const path = require('path');
-const cors = require('cors');
 
 const routes = {
 	auth: require('./modules/users/controllers/auth'),

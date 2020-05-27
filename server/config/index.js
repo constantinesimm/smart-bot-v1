@@ -10,7 +10,7 @@ if (process.env.NODE_ENV !== 'production') {
 module.exports = {
 	secretString: process.env.CONTROL_STRING,
 	sessionSecretString: process.env.SESSION_CONTROL_STRING,
-	appHost: process.env.APP_HOST,
+	appHost: process.env.APP_ADDR,
 	database: {
 		mongo: {
 			uri: {

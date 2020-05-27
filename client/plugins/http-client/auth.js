@@ -4,7 +4,6 @@ import { AUTH } from "../../config/constants/endpoints";
 const client = new ApiClient();
 
 export default {
-	
 	login(data) {
 		return client.post(AUTH.LOGIN, data)
 			.then(response => Promise.resolve(response.data))

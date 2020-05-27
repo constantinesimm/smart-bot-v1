@@ -121,7 +121,7 @@
                 <el-table-column label="Дата рождения" align="center" width="135px">
                     <template slot-scope="scope">
                         <el-tag :type="scope.row.birthday === 'н/д' ? 'danger' : 'info'">
-                            {{ `${new Date(scope.row.birthday).getDate()}.${new Date(scope.row.birthday).getMonth()+1}.${new Date(scope.row.birthday).getFullYear()}` }}
+                            {{ !scope.row.birthday ? 'н/д' : `${ new Date(scope.row.birthday).getDate()}.${new Date(scope.row.birthday).getMonth()+1}.${new Date(scope.row.birthday).getFullYear()}` }}
                         </el-tag>
                     </template>
                 </el-table-column>

@@ -1,0 +1,12 @@
+[28/May/2020:05:00:45 +0000] > 200 > POST > /api/users/employee/edit/5ecd2d815199974eb7eb5aeb > 59.443 > eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZWNkMmQ4MTUxOTk5NzRlYjdlYjVhZWIiLCJpYXQiOjE1OTA2NDE4OTYsImV4cCI6MTU5MDY1MjY5Nn0.8IDjSgpqYThlam9xAWnbsWP95ae9pG1xGO03yNlYqys > http://localhost:3000/users/account > Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36
+
+[28/May/2020:05:00:48 +0000] > 200 > POST > /api/users/admins/all > 20.142 > eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZWNkMmQ4MTUxOTk5NzRlYjdlYjVhZWIiLCJpYXQiOjE1OTA2NDE4OTYsImV4cCI6MTU5MDY1MjY5Nn0.8IDjSgpqYThlam9xAWnbsWP95ae9pG1xGO03yNlYqys > http://localhost:3000/users/admins/list > Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36
+
+[28/May/2020:05:00:59 +0000] > 200 > POST > /api/auth/logout > 48.587 > eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZWNkMmQ4MTUxOTk5NzRlYjdlYjVhZWIiLCJpYXQiOjE1OTA2NDE4OTYsImV4cCI6MTU5MDY1MjY5Nn0.8IDjSgpqYThlam9xAWnbsWP95ae9pG1xGO03yNlYqys > http://localhost:3000/users/admins/list > Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36
+
+[28/May/2020:05:02:09 +0000] > 200 > POST > /api/auth/authenticate > 138.051 > authToken(-) > http://localhost:3000/users/login > Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36
+
+[28/May/2020:05:02:13 +0000] > 200 > POST > /api/users/admins/all > 25.499 > authToken(eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZWNkMmQ4MTUxOTk5NzRlYjdlYjVhZWIiLCJpYXQiOjE1OTA2NDIxMjksImV4cCI6MTU5MDY1MjkyOX0.va1waLGVt48r_uzFKkde6L-vPp4mUmmXF4VAxTcjgI4) > http://localhost:3000/users/admins/list > Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36
+
+[28/May/2020:05:02:26 +0000] > 200 > POST > /api/users/employee/edit/5ecd2d815199974eb7eb5aeb > 45.557 > authToken(eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZWNkMmQ4MTUxOTk5NzRlYjdlYjVhZWIiLCJpYXQiOjE1OTA2NDIxMjksImV4cCI6MTU5MDY1MjkyOX0.va1waLGVt48r_uzFKkde6L-vPp4mUmmXF4VAxTcjgI4) > http://localhost:3000/users/account > Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36
+

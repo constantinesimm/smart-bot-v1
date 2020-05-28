@@ -1,20 +1,26 @@
-if (process.env.NODE_ENV !== 'production') require('dotenv').config({ path: require('path').join(__dirname + '/../../.env') });
+const path = require('path');
+if (process.env.NODE_ENV !== 'production') {
+	const dotenv = require('dotenv');
+	
+	dotenv.config({
+		path: path.join(__dirname + '/../../.env')
+	});
+}
 
 module.exports = {
 	secretString: process.env.CONTROL_STRING,
-	appHost: process.env.APP_HOST,
+	sessionSecretString: process.env.SESSION_CONTROL_STRING,
+	appHost: process.env.APP_ADDR,
 	database: {
 		mongo: {
 			uri: {
 				local: `mongodb://127.0.0.1:27017/${ process.env.DB_NAME }`,
-				prod: `mongodb+srv://${ process.env.DB_USER }:${ process.env.DB_SECRET }@${ process.env.DB_HOST }/${ process.env.DB_NAME }?retryWrites=true&w=majority`,
-				connect() {
-					return process.env.NODE_ENV !== 'production' ? this.local : this.prod
-				}
+				prod: `mongodb+srv://${ process.env.DB_USER }:${ process.env.DB_SECRET }@${ process.env.DB_HOST }/${ process.env.DB_NAME }?retryWrites=true&w=majority`
 			},
 			options: {
 				useUnifiedTopology: true,
-				useNewUrlParser: true
+				useNewUrlParser: true,
+				useFindAndModify: false
 			}
 		}
 	},

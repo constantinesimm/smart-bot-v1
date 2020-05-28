@@ -1,6 +1,15 @@
 const path = require('path');
 
 module.exports = {
+	lintOnSave: false,
+	configureWebpack: {
+		devServer: {
+			clientLogLevel: 'info',
+			watchOptions: {
+				poll: true
+			}
+		}
+	},
 	chainWebpack: config => {
 		// change main path name from 'client' to 'client'
 		config.entry('app').clear().add('./client/main.js').end();

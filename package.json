@@ -1,27 +1,48 @@
 {
-  "name": "smart-bot",
+  "name": "rice-smart-bot",
   "version": "0.1.0",
+  "description": "Smart Bot Application",
+  "author": "Kostiantin Peschanov (constantine.peschanov@gmail.com)",
+  "license": "MIT",
   "private": true,
+  "main": "./server/app.js",
   "scripts": {
-    "start": "node ./server/bin/www",
+    "start": "node server/bin/www",
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "dev:server": "nodemon ./server/bin/www-single"
+    "dev:server": "nodemon server/bin/www",
+    "dev:app": "cross-env NODE_ENV=development concurrently \"npm run dev:server\" \"npm run serve\"",
+    "dev:static": "cross-env NODE_ENV=development npm run build && npm run dev:server",
+    "postinstall": "npm run build"
   },
   "dependencies": {
+    "ajv": "^6.12.2",
+    "ajv-errors": "^1.0.1",
+    "ajv-keywords": "^3.4.1",
+    "awesome-mask": "^1.1.1",
+    "axios": "^0.19.2",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
+    "clipboard": "^2.0.6",
     "core-js": "^3.6.4",
     "debug": "~2.6.9",
+    "echarts": "^4.7.0",
+    "element-ui": "^2.13.1",
     "express": "~4.16.1",
+    "helmet": "^3.22.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.9.13",
     "morgan": "~1.9.1",
     "nodemailer": "^6.4.6",
+    "passport": "^0.4.1",
+    "passport-local": "^1.0.0",
+    "secure-ls": "^1.2.6",
     "vue": "^2.6.11",
+    "vue-count-to": "^1.0.13",
     "vue-router": "^3.1.6",
-    "vuex": "^3.1.3"
+    "vuex": "^3.1.3",
+    "vuex-persistedstate": "^3.0.1"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.3.0",
@@ -32,10 +53,27 @@
     "babel-eslint": "^10.1.0",
     "concurrently": "^5.2.0",
     "cors": "^2.8.5",
+    "cross-env": "^7.0.2",
     "dotenv": "^8.2.0",
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^6.2.2",
+    "node-sass": "^4.14.1",
     "nodemon": "^2.0.3",
+    "sass-loader": "^8.0.2",
     "vue-template-compiler": "^2.6.11"
-  }
+  },
+  "keywords": [
+    "MongoDB",
+    "ExpressJS",
+    "VueJS",
+    "NodeJS"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:constantinesimm/smart-bot.git"
+  },
+  "bugs": {
+    "url": "https://github.com/constantinesimm/smart-bot/issues"
+  },
+  "homepage": "https://github.com/constantinesimm/smart-bot#readme"
 }

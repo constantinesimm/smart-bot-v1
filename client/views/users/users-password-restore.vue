@@ -1,0 +1,231 @@
+<template>
+    <el-row type="flex" justify="center" class="el-page-row">
+        <el-col :span="24">
+            <transition name="el-zoom-in-center">
+                <el-form v-show="!this.isFormLoading" :model="passwordRestoreForm" :rules="rules" :loading="this.isFormLoading" ref="passwordRestoreForm" size="small">
+                    <el-form-item class="el-form-item__header">
+                        <img class="el-form-item__logo" src="/img/logo/rice_logo.png"/>
+                    </el-form-item>
+
+                    <el-divider class="el-form-item__top-divider"/>
+                    <div>
+                        <el-row class="el-form-group__row">
+                            <el-col :span="6">
+                                <el-form-item label="User ID" prop="userId">
+                                    <el-input v-model="passwordRestoreForm.userId" v-on:input="submitForm" :disabled="true" readonly/>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="16">
+                                <el-form-item label="Email" prop="email">
+                                    <el-input v-model="passwordRestoreForm.email" v-on:input="submitForm" :disabled="true" readonly/>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+
+                        <el-row class="el-form-group__row">
+                            <el-col :span="24">
+                                <el-form-item label="Пароль" prop="secret" @keypress.enter.native="submitForm">
+
+                                    <el-input v-model="passwordRestoreForm.secret" show-password placeholder="Пример: Example1" />
+
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                        <el-row class="el-form-group__row">
+                            <el-col :span="24">
+                                <el-form-item label="Подтверждение пароля" prop="secretConfirm" @keypress.enter.native="submitForm">
+
+                                    <el-input v-model="passwordRestoreForm.secretConfirm" show-password placeholder="Пример: Example1"/>
+
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                        <el-form-item class="el-form-item__submit">
+                            <el-button v-on:click="submitForm" :loading="this.isSubmitLoading" icon="fas fa-user-check" type="success" size="medium" plain>
+                                Обновить пароль
+                            </el-button>
+                        </el-form-item>
+
+                    </div>
+
+                    <el-divider class="el-form-item__bottom-divider"/>
+
+                    <el-form-item class="el-form-item__footer">
+                        <el-link href="/users/login" size="medium">
+                            <i class="fas fa-sign-in-alt"></i>
+                            Страница авторизации
+                        </el-link>
+                    </el-form-item>
+                </el-form>
+            </transition>
+        </el-col>
+    </el-row>
+</template>
+
+<script>
+	import validateRules from '../../plugins/validator/rules';
+	import authClient from '../../plugins/http-client/auth';
+
+	export default {
+		name: 'users-password-restore',
+        data() {
+	        const comparePasswordsRule = (rule, value, callback) => {
+		        return value === this.passwordRestoreForm.secret ? callback() : callback('Пароль и подтверждение пароля не совпадают')
+	        };
+
+	        return {
+		        rules: {
+			        secret: validateRules.secret,
+			        secretConfirm: [
+				        { required: true, message: 'Введите подтверждение пароля' },
+				        { validator: comparePasswordsRule }
+			        ],
+		        },
+		        passwordRestoreForm: {
+		        	userId: '',
+                    email: '',
+			        secret: '',
+			        secretConfirm: ''
+		        },
+		        isSubmitLoading: false,
+		        isFormLoading: true,
+            }
+        },
+		created() {
+			authClient.checkToken('service', { token: this.$route.params.token })
+				.then(response => {
+					this.passwordRestoreForm.userId = response.user.userId;
+					this.passwordRestoreForm.email = response.user.email;
+					this.isFormLoading = false;
+				})
+				.catch(error => {
+					this.$notify.error(error.message);
+					this.$router.push('/users/login');
+				})
+		},
+		methods: {
+			submitForm() {
+				this.$refs.passwordRestoreForm.validate(valid => {
+					if (valid) {
+						this.isSubmitLoading = true;
+
+						authClient.passwordRestoreComplete(this.passwordRestoreForm)
+							.then(response => {
+								this.$message.success(response.message);
+
+								this.$router.push('/users/login');
+							})
+							.catch(error => this.$message.error(error.message))
+							.finally(() => this.isSubmitLoading = false)
+                    } else return false;
+                });
+			}
+		}
+	}
+</script>
+
+<style lang="scss" scoped>
+    .el-form {
+        padding: 15px 25px;
+        border-radius: 15px;
+        box-shadow: 0 -5px 25px 0 rgba(0, 0, 0, 0.1), 0 5px 25px 0 rgba(0, 0, 0, 0.1);
+
+        .el-form-item__header {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 0;
+            padding-top: 10px;
+        }
+
+        .el-form-group__row {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .el-form-item__submit {
+            display: flex;
+            justify-content: center;
+            margin-top: 35px;
+
+            .el-button {
+                min-width: 125px;
+            }
+        }
+
+        .el-form-item__footer {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 0;
+        }
+
+        .el-form-item__top-divider {
+            margin: 10px 0 25px 0;
+        }
+        .el-form-item__bottom-divider {
+            margin: 25px 0 5px 0;
+        }
+    }
+
+    @media screen and (max-width: 500px) {
+        .el-page-row {
+            & > .el-col {
+                width: 100%!important;
+            }
+        }
+
+    }
+
+    @media screen and (min-width: 501px) and (max-width: 767px) {
+        .el-page-row {
+            height: 100%;
+
+            & > .el-col {
+                width: 75%!important;
+                margin: auto;
+            }
+        }
+    }
+
+    @media screen and (min-width: 768px) and (max-width: 991px) {
+        .el-page-row {
+            height: 100%;
+
+            & > .el-col {
+                width: 50%!important;
+                margin: auto;
+            }
+        }
+    }
+
+    @media screen and (min-width: 992px) and (max-width: 1199px) {
+        .el-page-row {
+            height: 100%;
+
+            &>.el-col {
+                width: 33%!important;
+                margin: auto;
+            }
+        }
+    }
+
+    @media screen and (min-width: 1200px)  and (max-width: 1399px) {
+        .el-page-row {
+            height: 100%;
+
+            &>.el-col {
+                width: 33%!important;
+                margin: auto;
+            }
+        }
+    }
+    @media screen and (min-width: 1400px) {
+        .el-page-row {
+            height: 100%;
+
+            &>.el-col {
+                width: 25%!important;
+                margin: auto;
+            }
+        }
+    }
+</style>

@@ -1,6 +1,6 @@
 <template>
-    <el-header>
-        <el-col class="header-logo-container">
+    <el-row>
+        <el-col class="header-logo-container" :xs="24" :sm="24">
             <el-link :underline="false" class="header-logo-link" href="/dashboard">
                 <img class="header-logo-img" src="/img/logo/rice_logo.png"/>
                 <span class="header-logo-text">Rice food</span>
@@ -10,7 +10,7 @@
             <el-button @click="pushUserAccountPage" type="text" size="mini" icon="fas fa-user-cog"> Настройки аккаута</el-button>
             <el-button @click="signOut" type="danger" size="mini" icon="fas fa-power-off" plain> Выход</el-button>
         </el-col>
-    </el-header>
+    </el-row>
 </template>
 
 <script>
@@ -31,7 +31,7 @@
 </script>
 
 <style lang="scss" scoped>
-    .el-header {
+    .el-row {
         display: flex;
         flex-direction: row;
         justify-content: space-between;

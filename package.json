@@ -11,9 +11,9 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "dev:server": "cross-env NODE_ENV=development nodemon server/bin/www",
-    "dev:app": "concurrently \"npm run dev:server\" \"npm run serve\"",
-    "dev:static": "npm run build && npm run dev:server",
+    "dev:server": "nodemon server/bin/www",
+    "dev:app": "cross-env NODE_ENV=development concurrently \"npm run dev:server\" \"npm run serve\"",
+    "dev:static": "cross-env NODE_ENV=development npm run build && npm run dev:server",
     "postinstall": "npm run build"
   },
   "dependencies": {

@@ -1,5 +1,4 @@
 const helmet = require('helmet');
-const logger = require('morgan');
 const express = require('express');
 const passport = require('passport');
 const bodyParser = require('body-parser');
@@ -9,6 +8,7 @@ const connectMongoDB = require('./libs/database/mongoose');
 const setPassportAuthStrategy = require('./libs/authenticate/passport');
 
 /* Middleware */
+const setHttpLogger = require('./middleware/http-logger');
 const setController = require('./controller');
 const setErrorHandler = require('./middleware/error-handler');
 
@@ -17,15 +17,18 @@ connectMongoDB();
 
 const app = express();
 
-/* NODE_ENV=dev middleware */
-if (process.env.NODE_ENV !== 'production') {
-	app.use(require('cors')({
-		'Access-Control-Allow-Origin': 'http://localhost:3000',
+/* NODE_ENV=development middleware */
+if (process.env.NODE_ENV === 'development') {
+	const cors = require('cors');
+	app.use(cors({
+		'Access-Control-Allow-Origin': '*',
 		'Access-Control-Allow-Headers': 'Origin, Content-Type, Accept, Authorization',
 		'Access-Control-Allow-Methods': 'POST, OPTIONS'
 	}));
-	app.use(logger('dev'));
 }
+
+/* Http logger middleware */
+setHttpLogger(app);
 
 /* Secure middleware */
 app

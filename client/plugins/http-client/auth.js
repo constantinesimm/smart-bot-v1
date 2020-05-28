@@ -1,15 +1,10 @@
 import { ApiClient } from './client';
-import { AUTH } from "../../config/constants/endpoints";
+import { BASE_URL, AUTH } from "../../config/constants/endpoints";
 
-const client = new ApiClient(process.env.APP_ADDR);
+
+const client = new ApiClient(BASE_URL);
 
 export default {
-	login(data) {
-		return client.post(AUTH.LOGIN, data)
-			.then(response => Promise.resolve(response.data))
-			.catch(error => Promise.reject(error.response.data));
-	},
-	
 	logout(data) {
 		return client.post(AUTH.LOGOUT, data)
 			.then(response => Promise.resolve(response.data))

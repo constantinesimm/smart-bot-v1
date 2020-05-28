@@ -5,10 +5,7 @@ const AdminModel = require('../../modules/users/model');
 const AuthService = require('../../modules/users/services/auth');
 
 module.exports = passport => {
-	passport.use(new LocalStrategy({
-		usernameField: 'email',
-		passwordField: 'secret'
-	}, (username, password, done) => {
+	passport.use(new LocalStrategy({ usernameField: 'email', passwordField: 'secret'}, (username, password, done) => {
 		AdminModel.findOne({ email: username })
 			.then(user => {
 				if (!user) return done(null, false, { status: 404, message: 'Пользователь не найден или не существует'});
@@ -22,7 +19,6 @@ module.exports = passport => {
 					
 					user.save().then(() => done(null, { user: AuthService.publicUser(user), token: user.accessToken }));
 				});
-				
 			})
 			.catch(error => done(new HttpError(error)))
 	}));

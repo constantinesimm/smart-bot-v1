@@ -24,6 +24,5 @@ module.exports = app => {
 		});
 		
 		return fs.createReadStream(filePath).pipe(res);
-		
 	});
 };

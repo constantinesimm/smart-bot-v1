@@ -1,7 +1,7 @@
 import { ApiClient } from './client';
 import { USERS } from "../../config/constants/endpoints";
 
-const client = new ApiClient();
+const client = new ApiClient(process.env.APP_ADDR);
 
 export default {
 	getAll(type) {

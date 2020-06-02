@@ -144,9 +144,9 @@
                 },
                 userRegisterDate: new Date( parseInt( this.$store.getters['auth/currentUser']._id.substring(0,8), 16 ) * 1000 ).toLocaleDateString(),
                 userAccountForm: {
-	                firstName: this.$store.getters['auth/currentUser'].firstName,
-	                lastName: this.$store.getters['auth/currentUser'].lastName,
-	                phoneNumber: contentFormat.phone(this.$store.getters['auth/currentUser'].phoneNumber),
+	                firstName: this.$store.getters['auth/currentUser'].firstName || 'empty',
+	                lastName: this.$store.getters['auth/currentUser'].lastName || 'empty',
+	                phoneNumber: contentFormat.phone(this.$store.getters['auth/currentUser'].phoneNumber) || '+38 (067) 111 11 11',
                     birthday: this.$store.getters['auth/currentUser'].birthday || ''
                 },
 		        isSubmitLoading: false,

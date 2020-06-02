@@ -1,5 +1,9 @@
 const BASE_URL = process.env.NODE_ENV === 'production' ? 'https://rice-smart-bot.herokuapp.com' : 'http://localhost:3000';
 
+const ADMIN = {
+	GET_LOGS: '/api/admin/service/log-data'
+};
+
 const AUTH = {
 	LOGIN: `/api/auth/authenticate`,
 	LOGOUT: `/api/auth/logout`,
@@ -17,4 +21,4 @@ const USERS = {
 	GET_CLIENTS: `/api/users/clients/all`,
 };
 
-export { BASE_URL, AUTH, USERS };
+export { BASE_URL, ADMIN, AUTH, USERS };

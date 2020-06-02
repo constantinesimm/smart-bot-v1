@@ -13,7 +13,7 @@ const subjectTemplate = template => {
 };
 
 const letterTemplate = (template, name, token) => {
-	const host = process.env.NODE_ENV === 'production' ? appHost : 'http://localhost:3000';
+	const host = process.env.NODE_ENV === 'production' ? appHost : 'http://localhost:3000/';
 	const usersLoginPage = `${ host }users/login`;
 	
 	const link = {

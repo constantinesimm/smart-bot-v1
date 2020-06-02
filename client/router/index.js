@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import store from "../store";
+import el from "element-ui/src/locale/lang/el";
 
 Vue.use(VueRouter);
 
@@ -125,6 +126,20 @@ router.beforeEach((to, from, next) => {
   //если юзер авторизован - перенаправляем его обратно.
   if (to.matched.some(record => record.meta.publicRoute)) {
     if (store.getters['auth/isLoggedIn']) {
+      next({
+        path: from.fullPath
+      })
+    } else {
+      next();
+    }
+  } else {
+    next();
+  }
+  
+  //serviceRoute доступен только юзерам c уровнем прав доступа - супер админ.
+  //если прав доступа недостаточно - перенаправляем его обратно.
+  if (to.matched.some(record => record.meta.serviceRoute)) {
+    if (store.getters['auth/currentUser'].role === 'super') {
       next({
         path: from.fullPath
       })

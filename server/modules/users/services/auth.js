@@ -34,7 +34,7 @@ class AuthService {
 				return Promise.reject(reason);
 			} else {
 				return AdminModel.findOne({ 'email': decodedJwt.email }, (error, result) => {
-					if (error) return Promise.reject({ status: 500, message: error.message })
+					if (error) return Promise.reject({ status: 401, message: error.message })
 					if (!result) return Promise.reject({ status: 403, message: 'Некорректная ссылка регистрации. Пользователь не найден' })
 					
 					return Promise.resolve(result);
@@ -49,9 +49,10 @@ class AuthService {
 					Promise.reject({ status: 401, message: 'Срок действия сессии истёк. Пройдите авторизацию повторно' }) :
 					Promise.reject({ status: 401, message: 'Некорректный токен сессии. Пройдите авторизацию повторно' });
 			} else {
-				return AdminModel.findById(decodedJwt._id, {}, (error, result) => {
-					if (error) return Promise.reject({ status: 500, message: error.message })
-					if (!result) return Promise.reject({ status: 401, message: 'Пользователь не найден' })
+				return AdminModel.findOne({ _id: decodedJwt._id }, {}, (error, result) => {
+					if (error === null && result === null) return Promise.reject({ status: 401, message: 'Некорректные данные токена' });
+					if (error) return Promise.reject({ status: 401, message: error.message });
+					if (!result) return Promise.reject({ status: 401, message: 'Пользователь не найден' });
 					
 					return Promise.resolve();
 				});
@@ -188,9 +189,9 @@ class AuthService {
 		
 		return new Promise((resolve, reject) => {
 			AdminModel.findByIdAndUpdate(userId,{ accessToken: null },{ new: true }, (error, user) => {
-				if (error) return reject({ status: 500, message: error.message });
-				if (!user) return reject({ status: 404, message: 'Пользователь не найден'});
-				console.log(user)
+				if (error) return reject({ status: 401, message: error.message });
+				if (!user) return reject({ status: 401, message: 'Пользователь не найден'});
+				
 				return resolve({ message: `Хорошего дня, ${ user.firstName }!` });
 			});
 		});

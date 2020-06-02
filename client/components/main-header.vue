@@ -7,7 +7,7 @@
             </el-link>
         </el-col>
         <el-col>
-            <el-button @click="pushUserAccountPage" type="text" size="mini" icon="fas fa-user-cog"> Настройки аккаута</el-button>
+            <el-button @click="pushUserAccountPage" :class="userAccountActiveLink ? 'user-account__active-link' : 'user-account__btn-link'" type="text" size="mini" icon="fas fa-user-cog"> Настройки аккаута</el-button>
             <el-button @click="signOut" type="danger" size="mini" icon="fas fa-power-off" plain> Выход</el-button>
         </el-col>
     </el-row>
@@ -16,14 +16,22 @@
 <script>
 	export default {
 		name: 'main-header',
+        data() {
+			return {
+                userAccountActiveLink: false
+            }
+        },
+        mounted() {
+	        this.userAccountActiveLink = this.$route.path === '/users/account';
+        },
 		methods: {
 			pushUserAccountPage() {
-				this.$router.push('/users/account')
+				this.$router.push('/users/account');
             },
 			signOut() {
 				this.$store.dispatch('auth/logout')
 					.then(response => this.$message.success(response))
-					.catch(error => console.log(error))
+					.catch(error => this.$message.error(error.message))
                     .finally(() => this.$router.push('/users/login'));
 			}
 		}
@@ -37,7 +45,6 @@
         justify-content: space-between;
         align-items: center;
         width: 100%;
-        height: 55px!important;
         padding: 0;
         background-color: #FAFBF8;
         box-shadow: 0 4px 8px 0 rgba(0,0,0,.12), 0 2px 4px 0 rgba(0,0,0,.08);
@@ -86,6 +93,18 @@
             align-items: center;
             padding: 0 15px;
 
+            .user-account__btn-link {
+                color: #909399;
+
+                &:hover {
+                    color: #409EFF;
+                }
+            }
+
+            .user-account__active-link {
+                color: #409EFF;
+            }
+
             .el-button {
                 font-size: 14px;
                 margin: 0 5px
@@ -95,5 +114,9 @@
 
     .el-dropdown-link {
         cursor: pointer;
+    }
+
+    .el-menu--horizontal > .el-submenu .el-submenu__title {
+        height: 45px!important;
     }
 </style>

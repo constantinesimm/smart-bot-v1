@@ -121,7 +121,7 @@
                 <el-table-column label="Дата рождения" align="center" width="135px">
                     <template slot-scope="scope">
                         <el-tag :type="scope.row.birthday === 'н/д' ? 'danger' : 'info'">
-                            {{ !scope.row.birthday ? 'н/д' : `${ new Date(scope.row.birthday).getDate()}.${new Date(scope.row.birthday).getMonth()+1}.${new Date(scope.row.birthday).getFullYear()}` }}
+                            {{ scope.row.birthday === 'н/д' ? 'н/д' : `${ new Date(scope.row.birthday).getDate()}.${new Date(scope.row.birthday).getMonth()+1}.${new Date(scope.row.birthday).getFullYear()}` }}
                         </el-tag>
                     </template>
                 </el-table-column>
@@ -230,7 +230,7 @@
 					        rows.splice(index, 1);
 				        })
                         .catch(error => this.$notify.error(error.message));
-                };
+                }
             },
             editEmployer(index, rows, docId) {
 	            rows[index].edit = !rows[index].edit;
@@ -238,7 +238,10 @@
 	            const data = { role: rows[index].role };
 
 	            usersClient.employeeEdit(docId, data)
-                    .then(response => this.$notify.success(response.message))
+                    .then(response => {
+	                    this.$notify.success(response.message);
+	                    this.$store.dispatch('auth/update_user', response);
+                    })
                     .catch(error => this.$notify.error(error.message))
             }
         },
@@ -248,6 +251,7 @@
 	                this.isTableLoading = false;
 
 	                this.adminUsersList = response.slice().map(user => {
+
 	                	return {
 	                		docId: user._id,
 			                userId: user.userId,

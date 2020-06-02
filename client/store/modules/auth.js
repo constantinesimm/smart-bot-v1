@@ -37,6 +37,11 @@ const mutations = {
 		state.token = '';
 		state.user = '';
 	},
+	err_logout(state) {
+		state.status = 'error';
+		state.token = '';
+		state.user = '';
+	},
 };
 const actions = {
 	login({ commit }, payload) {
@@ -54,20 +59,6 @@ const actions = {
 					
 					return reject(error);
 				});
-			
-			/*
-			Axios.post(AUTH.LOGIN, payload)
-				.then(response => {
-					commit('auth_success', response.data);
-					
-					return resolve(response.data);
-				})
-				.catch(error => {
-					commit('auth_error');
-					
-					return reject(error.response.data);
-				});
-			 */
 		});
 	},
 	logout({ commit }) {
@@ -88,7 +79,7 @@ const actions = {
 		});
 	},
 	err_logout({ commit }, payload) {
-		commit('logout');
+		commit('err_logout');
 		setTimeout(() => router.push('/users/login'), 1000);
 		
 		return payload;

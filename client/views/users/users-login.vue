@@ -73,7 +73,7 @@
 				                this.$message.success(`Приветствую, ${ response.user.firstName }!`);
 				                this.$router.push('/dashboard');
 			                })
-			                .catch(error => this.$message.error(error.message))
+			                .catch(error => this.$message.error(error.response.data.message))
 			                .finally(() => this.isSubmitLoading = false);
                     } else return false;
                 });

@@ -1,4 +1,4 @@
-# [**R**ice - euro-asian food restaurant](https://rice-food.com.ua/) Application
+# [**R**ice](https://rice-food.com.ua/) Smart Bot Web Application
 
 This project build using [**M**ongoDB](https://www.mongodb.com/) [**E**xpressJS](https://expressjs.com/) [**V**ueJS](https://vuejs.org/) [**N**odeJS](https://nodejs.org/en/) stack, with SPA rendered on the client side.
 

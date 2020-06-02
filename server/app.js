@@ -8,7 +8,6 @@ const connectMongoDB = require('./libs/database/mongoose');
 const setPassportAuthStrategy = require('./libs/authenticate/passport');
 
 /* Middleware */
-const setHttpLogger = require('./middleware/http-logger');
 const setController = require('./controller');
 const setErrorHandler = require('./middleware/error-handler');
 
@@ -26,9 +25,6 @@ if (process.env.NODE_ENV === 'development') {
 		'Access-Control-Allow-Methods': 'POST, OPTIONS'
 	}));
 }
-
-/* Http logger middleware */
-setHttpLogger(app);
 
 /* Secure middleware */
 app

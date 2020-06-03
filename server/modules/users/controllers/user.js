@@ -10,7 +10,7 @@ const UserValidator = require('../../../middleware/validator/user-validator');
  * @apiPermission all authenticated users
  * @apiGroup User
  *
- * @apiSuccess (200) {Array} Array with admin users
+ * @apiSuccess (200) {Array} Array with auth users
  */
 router.post('/admins/all', RouteGuard.isPrivate, UserValidator.getAllUsers, (req, res, next) => {
 	UserService.getAll()
@@ -21,7 +21,7 @@ router.post('/admins/all', RouteGuard.isPrivate, UserValidator.getAllUsers, (req
 /**
  * @api {post} /api/users/employee/edit/:docId
  * @apiName User edit account
- * @apiPermission admin and super
+ * @apiPermission auth and super
  * @apiGroup User
  *
  * @apiParam {String} [docId] Mongo document ObjectId in request params
@@ -42,7 +42,7 @@ router.post('/employee/edit/:docId', RouteGuard.isPrivate, UserValidator.employe
 /**
  * @api {post} /api/users/employee/remove/:docId
  * @apiName User remove account
- * @apiPermission admin and super
+ * @apiPermission auth and super
  * @apiGroup User
  *
  * @apiParam {String} [docId] Mongo document ObjectId in request params

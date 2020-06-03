@@ -16,7 +16,7 @@ const filePath = path.join(__dirname, '../dist/index.html');
 module.exports = app => {
 	app.use('/api/auth', routes.auth);
 	app.use('/api/users', routes.users);
-	app.use('/api/admin', routes.admin);
+	app.use('/api/auth', routes.admin);
 	
 	/* static path and file */
 	app.use(express.static(path.join(__dirname, '../dist')));

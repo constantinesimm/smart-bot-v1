@@ -31,7 +31,7 @@ router.post('/authenticate', RouteGuard.isPublic, AuthValidator.loginForm, (req,
 /**
  * @api {post} /api/auth/register/invite
  * @apiName User registration invite
- * @apiPermission admin, super
+ * @apiPermission auth, super
  * @apiGroup Auth
  *
  * @apiParam {String} [email] Email

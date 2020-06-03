@@ -1,7 +1,7 @@
 const BASE_URL = process.env.NODE_ENV === 'production' ? 'https://rice-smart-bot.herokuapp.com' : 'http://localhost:3000';
 
 const ADMIN = {
-	GET_LOGS: '/api/admin/service/log-data'
+	GET_LOGS: '/api/auth/service/log-data'
 };
 
 const AUTH = {

@@ -16,7 +16,17 @@ const routes = [
     component: () => import('../views/dashboard/dashboard'),
     meta: {
       title: 'Rice: Дашборд',
-      layout: 'admin-panel',
+      layout: 'auth-panel',
+      privateRoute: true
+    }
+  },
+  {
+    path: '/products',
+    name: 'ProductsPage',
+    component: () => import('../views/products/products-page'),
+    meta: {
+      title: 'Rice: Позиции меню',
+      layout: 'auth-panel',
       privateRoute: true
     }
   },
@@ -31,7 +41,7 @@ const routes = [
         name: 'UsersAccount',
         meta: {
           title: 'Rice: Детали пользователя',
-          layout: 'admin-panel',
+          layout: 'auth-panel',
           privateRoute: true
         },
         component: () => import('../views/users/users-account')
@@ -41,7 +51,7 @@ const routes = [
         name: 'UsersAdminsList',
         meta: {
           title: 'Rice: Сотрудники',
-          layout: 'admin-panel',
+          layout: 'auth-panel',
           privateRoute: true
         },
         component: () => import('../views/users/users-admins-list')
@@ -51,7 +61,7 @@ const routes = [
         name: 'UsersClientsList',
         meta: {
           title: 'Rice: Клиенты',
-          layout: 'admin-panel',
+          layout: 'auth-panel',
           privateRoute: true
         },
         component: () => import('../views/users/users-client-list')

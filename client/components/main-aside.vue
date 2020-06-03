@@ -1,5 +1,5 @@
 <template>
-    <el-aside :class="this.isCollapsed ? 'menu-collapse' : 'menu-active'">
+    <el-aside :class="this.isCollapsed ? 'products-collapse' : 'products-active'">
         <el-menu class="el-menu-vertical" :collapse="isCollapsed" :router="true" :default-active="activeLink">
             <el-menu-item :index="'/dashboard'">
                 <i class="fas fa-chart-line"></i>
@@ -9,6 +9,11 @@
             <el-menu-item  :index="'/orders'">
                 <i class="far fa-list-alt"></i>
                 <span>Заказы</span>
+            </el-menu-item>
+
+            <el-menu-item :index="'/products'">
+                <i class="fas fa-book-open"></i>
+                <span>Категории и Позиции</span>
             </el-menu-item>
 
             <el-submenu :index="'/users'">

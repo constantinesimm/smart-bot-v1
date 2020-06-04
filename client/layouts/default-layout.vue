@@ -16,7 +16,7 @@
     .app-container {
         & > .app-content {
             height: inherit;
-            background: #eff1ea59;
+            background: #eff1ea;
         }
     }
 </style>

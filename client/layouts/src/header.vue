@@ -2,7 +2,7 @@
     <header class="app-header">
         <div class="app-header__navigation">
             <el-link :underline="false" href="/">
-                <el-avatar shape="square" fit="scale-down" src="/img/logo/rice_logo.png"></el-avatar>
+                <el-avatar shape="circle" fit="scale-down" src="/img/logo/app_logo.png"></el-avatar>
             </el-link>
             <transition name="el-zoom-in-center">
                 <el-button @click="handleCollapsedNav" class="toggle-menu hidden-sm-and-up" type="text" size="mini">
@@ -13,7 +13,7 @@
             <transition name="el-zoom-in-center">
                 <div :class="['collapsed__nav hidden-sm-and-up', { 'is-active': this.navMenuVisible }]">
                     <router-link class="el-link el-link--default" to="/dashboard">
-                        <i class="fas fa-chart-area fa-lg"></i> <span>Дашборд</span>
+                        <i class="fas fa-chart-area fa-lg"></i> <span> Статистика</span>
                     </router-link>
                     <router-link disabled="disabled" class="el-link el-link--default" to="/products">
                         <i class="fas fa-book-open fa-lg"></i> <span>Меню</span>
@@ -22,31 +22,35 @@
                         <i class="far fa-list-alt fa-lg"></i> <span>Заказы</span>
                     </router-link>
                     <router-link class="el-link el-link--default" to="/users/clients">
-                        <i class="fas fa-user-cog fa-lg"></i> <span>Клиенты</span>
+                        <i class="fas fa-users fa-lg"></i> <span>Клиенты</span>
                     </router-link>
                 </div>
             </transition>
             <transition name="el-zoom-in-center">
                 <div class="header__nav hidden-xs-only">
-                <router-link class="el-link el-link--default" to="/dashboard">
-                    <i class="fas fa-chart-area fa-lg"></i> <span class="hidden-xs-only">Дашборд</span>
-                </router-link>
-                <router-link disabled="disabled" class="el-link el-link--default" to="/products">
-                    <i class="fas fa-book-open fa-lg"></i> <span class="hidden-xs-only">Меню</span>
-                </router-link>
-                <router-link disabled="disabled" class="el-link el-link--default" to="/orders">
-                    <i class="far fa-list-alt fa-lg"></i> <span class="hidden-xs-only">Заказы</span>
-                </router-link>
-                <router-link class="el-link el-link--default" to="/users/clients">
-                    <i class="fas fa-user-cog fa-lg"></i> <span class="hidden-xs-only">Клиенты</span>
-                </router-link>
+                    <router-link class="el-link el-link--default" to="/dashboard">
+                        <i class="fas fa-chart-area fa-lg"></i> <span class="hidden-xs-only"> Статистика</span>
+                    </router-link>
+                    <router-link disabled="disabled" class="el-link el-link--default" to="/products">
+                        <i class="fas fa-book-open fa-lg"></i> <span class="hidden-xs-only">Меню</span>
+                    </router-link>
+                    <router-link disabled="disabled" class="el-link el-link--default" to="/orders">
+                        <i class="far fa-list-alt fa-lg"></i> <span class="hidden-xs-only">Заказы</span>
+                    </router-link>
+                    <router-link class="el-link el-link--default" to="/users/clients">
+                        <i class="fas fa-users fa-lg"></i> <span class="hidden-xs-only">Клиенты</span>
+                    </router-link>
+
             </div>
             </transition>
         </div>
 
-        <div class="app-header__options" @click="handleUserMenu">
-            <div class="toggle-user-menu">
-                <el-avatar>CS</el-avatar>
+        <div class="app-header__options">
+            <router-link class="el-link el-link--default" to="/users/staff">
+                <i class="fas fa-user-friends fa-lg"></i> <span>Сотрудники</span>
+            </router-link>
+            <div class="toggle-user-menu" @click="handleUserMenu">
+                <el-avatar shape="circle" fit="scale-down" src="/img/logo/app_logo.png">CS</el-avatar>
                 <i :class="[ !this.userMenuVisible ? 'fas fa-angle-down fa-lg' : 'fas fa-angle-up fa-lg']"></i>
             </div>
 
@@ -76,9 +80,13 @@
         },
         methods: {
 			handleCollapsedNav() {
+				if (!!this.userMenuVisible) this.handleUserMenu();
+
 				this.navMenuVisible = !this.navMenuVisible;
             },
             handleUserMenu() {
+				if (!!this.navMenuVisible) this.handleCollapsedNav();
+
 			    this.userMenuVisible = !this.userMenuVisible;
             },
 			click() {
@@ -204,6 +212,24 @@
         }
 
         &__options {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+
+            a[href] {
+                padding: 10px 5px 5px 5px;
+                font-size: 12px;
+
+                &.isActive {
+                    color: #409EFF;
+                    border-bottom: 2px solid #409EFF;
+                }
+
+                & span {
+                    margin-left: 5px;
+                }
+            }
+
             .toggle-user-menu {
                 display: flex;
                 flex-direction: row;
@@ -212,6 +238,9 @@
                 padding-right: 10px;
                 cursor: pointer;
 
+                & .el-avatar {
+                    background: transparent;
+                }
                 & i {
                     margin-left: 5px;
                     color: #606266;
@@ -224,8 +253,8 @@
                 top: 65px;
                 right: 10px;
                 width: 200px;
-                background: #ffffff;
                 padding: 10px 15px;
+                background: #ffffff;
                 border: 1px solid #9093997a;
                 border-radius: 10px;
                 box-shadow: 0px 0px 11px 3px rgba(39, 39, 39, 0.35), 0px 5px 9px 6px rgba(255, 255, 255, 0.5);
@@ -256,6 +285,7 @@
                     padding-top: 10px;
                     padding-bottom: 10px;
                     border-bottom: 1px solid #9093997a;
+                    font-size: 12px;
 
                     &.isActive {
                         color: #409EFF;
@@ -269,7 +299,7 @@
                 .btn-logout {
                     margin-top: 5px;
                     margin-left: 5px;
-                    font-size: 14px;
+                    font-size: 12px;
                     font-weight: 600;
                     color: #F56C6C;
                     border: unset!important;

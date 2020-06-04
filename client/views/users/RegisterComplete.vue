@@ -1,5 +1,5 @@
 <template>
-    
+    <div>reg complete</div>
 </template>
 
 <script>

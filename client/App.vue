@@ -1,16 +1,15 @@
 <template>
-  <div id="app">
-    <component :is="layout">
-      <router-view/>
-    </component>
-  </div>
+  <component id="app" :is="layout">
+      <router-view />
+  </component>
 </template>
 
 <script>
+  //import navMenu from './menu';
   export default {
-    computed: {
+      computed: {
       layout() {
-        return `${this.$route.meta.layout || 'default'}-layout`
+        return `${ this.$route.meta.layout || 'default' }-layout`
       }
     }
   }

@@ -2,17 +2,16 @@
 import Vue from 'vue';
 import App from './App.vue';
 
-/* Components */
+/* UI libraries and components */
 import ElementUI from 'element-ui';
-import DefaultLayout from './layouts/default-layout';
-import AdminPanelLayout from './layouts/admin-panel-layout';
+import { AdminLayout, DefaultLayout } from './layouts';
 
-/* Vue layouts */
-Vue.component('default-layout', DefaultLayout);
-Vue.component('admin-panel-layout', AdminPanelLayout);
+/* Register components */
+Vue.use(AdminLayout);
+Vue.use(DefaultLayout);
 
 /* Router & Store */
-import router from './router';
+import router from './router/router';
 import store from './store';
 
 /* Directives */
@@ -23,6 +22,7 @@ import locale from 'element-ui/lib/locale/lang/ru-RU'
 
 /* Styles */
 import 'element-ui/lib/theme-chalk/index.css';
+import 'element-ui/lib/theme-chalk/display.css';
 
 Vue.config.productionTip = process.env.NODE_ENV !== 'production';
 

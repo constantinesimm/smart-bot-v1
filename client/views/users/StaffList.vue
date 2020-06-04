@@ -1,5 +1,5 @@
 <template>
-    
+    <div>staff list</div>
 </template>
 
 <script>

@@ -1,5 +1,5 @@
 <template>
-    
+    <div>pass recovery</div>
 </template>
 
 <script>

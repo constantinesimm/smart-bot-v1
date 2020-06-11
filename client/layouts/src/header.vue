@@ -21,6 +21,9 @@
                     <router-link disabled="disabled" class="el-link el-link--default" to="/orders">
                         <i class="far fa-list-alt fa-lg"></i> <span>Заказы</span>
                     </router-link>
+                    <router-link class="el-link el-link--default" to="/users/staff">
+                        <i class="fas fa-user-friends fa-lg"></i> <span>Сотрудники</span>
+                    </router-link>
                     <router-link class="el-link el-link--default" to="/users/clients">
                         <i class="fas fa-users fa-lg"></i> <span>Клиенты</span>
                     </router-link>
@@ -37,6 +40,9 @@
                     <router-link disabled="disabled" class="el-link el-link--default" to="/orders">
                         <i class="far fa-list-alt fa-lg"></i> <span class="hidden-xs-only">Заказы</span>
                     </router-link>
+                    <router-link class="el-link el-link--default" to="/users/staff">
+                        <i class="fas fa-user-friends fa-lg"></i> <span class="hidden-xs-only">Сотрудники</span>
+                    </router-link>
                     <router-link class="el-link el-link--default" to="/users/clients">
                         <i class="fas fa-users fa-lg"></i> <span class="hidden-xs-only">Клиенты</span>
                     </router-link>
@@ -46,9 +52,6 @@
         </div>
 
         <div class="app-header__options">
-            <router-link class="el-link el-link--default" to="/users/staff">
-                <i class="fas fa-user-friends fa-lg"></i> <span>Сотрудники</span>
-            </router-link>
             <div class="toggle-user-menu" @click="handleUserMenu">
                 <el-avatar shape="circle" fit="scale-down" src="/img/logo/app_logo.png">CS</el-avatar>
                 <i :class="[ !this.userMenuVisible ? 'fas fa-angle-down fa-lg' : 'fas fa-angle-up fa-lg']"></i>
@@ -127,26 +130,13 @@
                     }
                 }
 
-                @media only screen and (max-width: $screen-sm-min) {
-                    .el-avatar {
-                        width: 35px;
-                        height: 35px;
-                        margin: 0 10px 0 5px;
-                        background: transparent;
-                        border: 1px solid #9093997a;
-                        box-shadow: 0px 0px 11px 3px rgba(39, 39, 39, 0.35), 0px 5px 9px 6px rgba(255, 255, 255, 0.5);
-                    }
-                }
-
-                @media only screen and (min-width: $screen-sm-min) {
-                    .el-avatar {
-                        width: 50px;
-                        height: 50px;
-                        margin: 0 10px 0 5px;
-                        background: transparent;
-                        border: 1px solid #9093997a;
-                        box-shadow: 0px 0px 11px 3px rgba(39, 39, 39, 0.35), 0px 5px 9px 6px rgba(255, 255, 255, 0.5);
-                    }
+                .el-avatar {
+                    width: 55px;
+                    height: 55px;
+                    margin: 0 10px 0 5px;
+                    background: transparent;
+                    border: 1px solid #9093997a;
+                    box-shadow: 0px 0px 11px 3px rgba(39, 39, 39, 0.35), 0px 5px 9px 6px rgba(255, 255, 255, 0.5);
                 }
 
                 & > span {
@@ -205,6 +195,19 @@
                             & span {
                                 margin-top: 5px;
                             }
+
+                            @media only screen and (max-width: $screen-sm-min) {
+
+                                & i {
+                                    margin-left: 0;
+                                }
+
+                                & span {
+                                    display: none;
+                                }
+                            }
+
+
                         }
                     }
                 }
@@ -238,9 +241,22 @@
                 padding-right: 10px;
                 cursor: pointer;
 
-                & .el-avatar {
-                    background: transparent;
+                @media only screen and (max-width: $screen-sm-min) {
+                    & .el-avatar {
+                        width: 30px;
+                        height: 30px;
+                        background: transparent;
+                    }
                 }
+
+                @media only screen and (min-width: $screen-sm-min) {
+                    & .el-avatar {
+                        width: 40px;
+                        height: 40px;
+                        background: transparent;
+                    }
+                }
+
                 & i {
                     margin-left: 5px;
                     color: #606266;

@@ -2,8 +2,6 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import store from '../store';
 
-import AuthLogin from '../views/auth/AuthLogin';
-
 const withPrefix = (prefix, routes) => routes.map((route) => {
 	route.path = prefix + route.path;
 	return route;
@@ -24,28 +22,16 @@ const routes = [
 		},
 		component: () => import(`@/views/dashboard/AdminDashboard`)
 	},
-	...withPrefix('/auth', [
-		{
-			path: '/login',
-			name: 'AuthLogin',
-			meta: {
-				layout: 'default',
-				pageTitle: 'Rice: Аутентификация',
-				requiresGuest: true
-			},
-			component: AuthLogin
+	{
+		path: '/auth/login',
+		name: 'AuthLogin',
+		meta: {
+			layout: 'default',
+			pageTitle: 'Rice: Аутентификация',
+			requiresGuest: true
 		},
-		{
-			path: '/:serviceToken/password/recovery',
-			name: 'PasswordRecovery',
-			meta: {
-				layout: 'default',
-				pageTitle: 'Rice: Восстановление пароля',
-				requiresGuest: true
-			},
-			component: () => import(`@/views/auth/PasswordRecovery`)
-		},
-	]),
+		component: () => import('../views/users/auth/AuthLogin')
+	},
 	...withPrefix('/users', [
 		{
 			path: '/clients',
@@ -86,6 +72,16 @@ const routes = [
 				requiresAuth: false
 			},
 			component: () => import(`@/views/users/RegisterComplete`)
+		},
+		{
+			path: '/:serviceToken/password/recovery',
+			name: 'PasswordRecovery',
+			meta: {
+				layout: 'default',
+				pageTitle: 'Rice: Восстановление пароля',
+				requiresGuest: true
+			},
+			component: () => import('../views/users/PasswordRecovery')
 		}
 	])
 ];

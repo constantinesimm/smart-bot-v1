@@ -21,8 +21,8 @@ import AwesomeMask from 'awesome-mask';
 import locale from 'element-ui/lib/locale/lang/ru-RU'
 
 /* Styles */
-import 'element-ui/lib/theme-chalk/index.css';
-import 'element-ui/lib/theme-chalk/display.css';
+import './assets/css/theme-chalk/index.css';
+import './assets/css/theme-chalk/display.css';
 
 Vue.config.productionTip = process.env.NODE_ENV !== 'production';
 

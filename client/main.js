@@ -11,7 +11,7 @@ Vue.use(AdminLayout);
 Vue.use(DefaultLayout);
 
 /* Router & Store */
-import router from './router/router';
+import router from './router';
 import store from './store';
 
 /* Directives */
@@ -32,7 +32,7 @@ Vue.directive('mask', AwesomeMask);
 Vue.use(ElementUI, { locale });
 
 new Vue({
-  router,
+  router: router,
   store,
   render: h => h(App)
 }).$mount('#app')

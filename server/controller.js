@@ -4,7 +4,6 @@ const express = require('express');
 
 /* Application API endpoints */
 const routes = {
-	admin: require('./modules/admin/controllers/admin'),
 	auth: require('./modules/users/controllers/auth'),
 	users: require('./modules/users/controllers/user'),
 };
@@ -16,7 +15,6 @@ const filePath = path.join(__dirname, '../dist/index.html');
 module.exports = app => {
 	app.use('/api/auth', routes.auth);
 	app.use('/api/users', routes.users);
-	app.use('/api/auth', routes.admin);
 	
 	/* static path and file */
 	app.use(express.static(path.join(__dirname, '../dist')));

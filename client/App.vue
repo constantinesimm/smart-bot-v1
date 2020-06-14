@@ -1,11 +1,12 @@
 <template>
   <component id="app" :is="layout">
-      <router-view />
+      <main class="app-content" role="main">
+          <router-view />
+      </main>
   </component>
 </template>
 
 <script>
-  //import navMenu from './menu';
   export default {
       computed: {
       layout() {
@@ -22,5 +23,10 @@
     font-family: 'Ubuntu', sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+  }
+  .app-content {
+      height: calc(100vh - 175px);
+      padding: 25px 10px;
+      background: #eff1ea;
   }
 </style>

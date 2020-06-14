@@ -1,7 +1,6 @@
 import Axios from 'axios';
-import router from "../../router";
 import authClient from '../../plugins/http-client/auth';
-import {AUTH, BASE_URL} from "../../config/constants/endpoints";
+import { AUTH, BASE_URL } from "../../config/constants/endpoints";
 
 let state = {
 	status: '',
@@ -78,12 +77,14 @@ const actions = {
 				})
 		});
 	},
+
 	err_logout({ commit }, payload) {
 		commit('err_logout');
-		setTimeout(() => router.push('/users/login'), 1000);
+		setTimeout(() => window.location.replace('/auth/login'), 1000);
 		
 		return payload;
 	},
+
 	update_user({ commit }, payload) {
 		commit('user_update', payload);
 		

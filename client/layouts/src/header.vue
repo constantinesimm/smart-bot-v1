@@ -52,23 +52,12 @@
         </div>
 
         <div class="app-header__options">
-            <div class="toggle-user-menu" @click="handleUserMenu">
-                <el-avatar shape="circle" fit="scale-down" src="/img/logo/app_logo.png">CS</el-avatar>
-                <i :class="[ !this.userMenuVisible ? 'fas fa-angle-down fa-lg' : 'fas fa-angle-up fa-lg']"></i>
-            </div>
-
-            <div :class="['user-details-menu', { 'is-active' : this.userMenuVisible }]">
-                <div class="user-auth-detail">
-                    <span>Авторизован как:</span><br>
-                    <span><< Константин Песчанов >></span>
-                </div>
-                <router-link class="el-link el-link--default" to="/users/profile" @click="handleUserMenu">
-                    <i class="fas fa-user-circle fa-lg"></i> <span>Настройки профиля</span>
-                </router-link>
-                <el-button @click="click" class="btn-logout" size="mini" icon="fas fa-power-off fa-lg" plain>
-                    <span> Выход</span>
-                </el-button>
-            </div>
+            <router-link class="el-link el-link--default" to="/users/profile" @click.prevent="handleUserMenu">
+                <i class="fas fa-user-circle fa-lg"></i> <span>Профиль</span>
+            </router-link>
+            <el-button @click="logOut" type="danger" class="btn-logout" size="mini" icon="fas fa-power-off" plain>
+                <span> Выход</span>
+            </el-button>
         </div>
     </header>
 </template>
@@ -83,17 +72,17 @@
         },
         methods: {
 			handleCollapsedNav() {
-				if (!!this.userMenuVisible) this.handleUserMenu();
+				if (this.userMenuVisible) this.handleUserMenu();
 
 				this.navMenuVisible = !this.navMenuVisible;
             },
             handleUserMenu() {
-				if (!!this.navMenuVisible) this.handleCollapsedNav();
+				if (this.navMenuVisible) this.handleCollapsedNav();
 
 			    this.userMenuVisible = !this.userMenuVisible;
             },
-			click() {
-				this.$parent.$emit('logout', 'message')
+			logOut() {
+				this.$parent.$emit('logout')
             }
         }
 	}
@@ -218,6 +207,7 @@
             display: flex;
             flex-direction: row;
             align-items: center;
+            margin-right: 15px;
 
             a[href] {
                 padding: 10px 5px 5px 5px;
@@ -233,104 +223,8 @@
                 }
             }
 
-            .toggle-user-menu {
-                display: flex;
-                flex-direction: row;
-                justify-content: center;
-                align-items: center;
-                padding-right: 10px;
-                cursor: pointer;
-
-                @media only screen and (max-width: $screen-sm-min) {
-                    & .el-avatar {
-                        width: 30px;
-                        height: 30px;
-                        background: transparent;
-                    }
-                }
-
-                @media only screen and (min-width: $screen-sm-min) {
-                    & .el-avatar {
-                        width: 40px;
-                        height: 40px;
-                        background: transparent;
-                    }
-                }
-
-                & i {
-                    margin-left: 5px;
-                    color: #606266;
-                }
-            }
-
-            .user-details-menu {
-                display: none;
-                position: absolute;
-                top: 65px;
-                right: 10px;
-                width: 200px;
-                padding: 10px 15px;
-                background: #ffffff;
-                border: 1px solid #9093997a;
-                border-radius: 10px;
-                box-shadow: 0px 0px 11px 3px rgba(39, 39, 39, 0.35), 0px 5px 9px 6px rgba(255, 255, 255, 0.5);
-
-                &.is-active {
-                    display: flex;
-                    flex-direction: column;
-                }
-
-                .user-auth-detail {
-                    font-size: 12px;
-                    padding-bottom: 10px;
-                    border-bottom: 1px solid #9093997a;
-
-                    & span:first-child {
-                        text-align: left;
-                    }
-
-                    & span:last-child {
-                        display: block;
-                        margin-top: 5px;
-                        text-align: center;
-                        font-weight: 500;
-                    }
-                }
-
-                & > a[href] {
-                    padding-top: 10px;
-                    padding-bottom: 10px;
-                    border-bottom: 1px solid #9093997a;
-                    font-size: 12px;
-
-                    &.isActive {
-                        color: #409EFF;
-                    }
-
-                    & > span {
-                        margin-left: 5px;
-                    }
-                }
-
-                .btn-logout {
-                    margin-top: 5px;
-                    margin-left: 5px;
-                    font-size: 12px;
-                    font-weight: 600;
-                    color: #F56C6C;
-                    border: unset!important;
-                    border: 1px solid rgba(96, 98, 102, 0.98);
-
-                    &:hover {
-                        color: #ffffff;
-                        border: unset;
-                        background: #F56C6C;
-                    }
-
-                    &.el-button--mini {
-                        padding: 5px 7px;
-                    }
-                }
+            .el-button {
+                margin-left: 10px;
             }
         }
     }

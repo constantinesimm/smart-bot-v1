@@ -35,10 +35,19 @@
 
                         <el-row>
                             <el-col :span="11" :xs="23">
+                                <el-form-item label="Пол" prop="gender">
 
+                                    <el-select v-model="registerForm.gender" placeholder="Пол">
+                                        <el-option label="Мужчина" value="male"/>
+                                        <el-option label="Женщина" value="female"/>
+                                    </el-select>
+
+                                </el-form-item>
                             </el-col>
                             <el-col :span="11" :xs="23">
-
+                                <el-form-item label="Телефон" prop="phoneNumber" @keypress.enter.native="submitForm">
+                                    <el-input v-model="registerForm.phoneNumber" v-mask="'+99 (999) 999 99 99'" placeholder="Пример: 380671112233" />
+                                </el-form-item>
                             </el-col>
                         </el-row>
 
@@ -55,7 +64,7 @@
                             </el-col>
                         </el-row>
 
-                        <el-row>
+                        <el-row type="flex" justify="center" align="middle">
                             <el-col :span="24">
                                 <el-form-item>
                                     <el-button @click="submitForm" :loading="this.isSubmitLoading" type="success" size="mini" round plain>
@@ -202,6 +211,18 @@
                         }
                     }
 
+                    .el-row:last-child {
+                        margin-top: 20px;
+
+                        .el-col {
+                            .el-form-item {
+                                display: flex;
+                                flex-direction: row;
+                                justify-content: center;
+                            }
+                        }
+                    }
+
                     @media only screen and (max-width: $screen-md-min) {
                         & .el-row {
                             display: flex;
@@ -223,7 +244,9 @@
                     .el-row {
                         .el-col {
                             .el-form-item {
-
+                                .el-select {
+                                    width: 100%;
+                                }
                             }
                         }
                     }
@@ -248,13 +271,3 @@
         }
     }
 </style>
-
-<!--
-.el-form-item:last-child {
-                        display: flex;
-                        flex-direction: row;
-                        justify-content: center;
-                        padding: 25px 0 10px;
-                        margin-bottom: 0;
-                    }
--->

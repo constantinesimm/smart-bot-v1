@@ -4,7 +4,8 @@
             <app-header />
         </slot>
 
-        <app-content />
+        <slot/>
+
 
         <slot name="footer">
             <app-footer />
@@ -14,17 +15,21 @@
 
 <script>
     import AppHeader from './src/header';
-    import AppContent from './src/content';
     import AppFooter from './src/footer';
 
     export default {
     	name: 'admin-layout',
         components: {
-    		AppHeader, AppContent, AppFooter
+    		AppHeader, AppFooter
         },
 	    created() {
-		    this.$on('logout', (text) => {
-			    alert(text);
+		    this.$on('logout', () => {
+			    this.$store.dispatch('auth/logout')
+                    .then(response => {
+                        this.$message.success(response.message);
+                        window.location.replace('/auth/login');
+                    })
+                    .catch(error => this.$message.error(error.message))
 		    })
 	    }
     }

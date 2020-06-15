@@ -83,7 +83,11 @@ const routes = [
 			},
 			component: () => import('../views/users/PasswordRecovery')
 		}
-	])
+	]),
+	{
+		path: '*',
+		redirect: '/'
+	}
 ];
 
 Vue.use(VueRouter);

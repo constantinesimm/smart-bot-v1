@@ -132,7 +132,7 @@
                 })
                 .catch(error => {
                     this.$message.error(error.message);
-                    this.$router.push('/users/login');
+                    this.$router.push('/auth/login');
                 })
         },
 		methods: {
@@ -145,7 +145,7 @@
                             .then(response => {
                                 this.$message.success(response.message);
 
-                                this.$router.push('/users/login');
+                                this.$router.push('/auth/login');
                             })
                             .catch(error => this.$message.error(error.message))
                             .finally(() => this.isSubmitLoading = false)

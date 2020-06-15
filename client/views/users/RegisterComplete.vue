@@ -68,7 +68,7 @@
                             <el-col :span="24">
                                 <el-form-item>
                                     <el-button @click="submitForm" :loading="this.isSubmitLoading" type="success" size="mini" round plain>
-                                        Обновить пароль
+                                        Завершить регистрацию
                                     </el-button>
                                 </el-form-item>
                             </el-col>
@@ -126,6 +126,7 @@
         created() {
             authClient.checkToken('service', { token: this.$route.params.serviceToken })
                 .then(response => {
+                    this.registerForm.userId = response.user.userId;
                     this.registerForm.email = response.user.email;
                     this.isFormLoading = false;
                 })

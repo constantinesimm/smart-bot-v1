@@ -16,22 +16,7 @@ class AuthValidator {
 	static checkToken(req, res, next) {
 		return ajv.validate(AuthSchema.checkToken(), req.body) ? next() : next(new HttpError(400, `Ошибка валидации: ${ ajv.errors[0].message }`));
 	}
-	
-	static registerInviteForm(req, res, next) {
-		return ajv.validate(AuthSchema.registerInvite(), req.body) ? next() : next(new HttpError(400, `Ошибка валидации: ${ ajv.errors[0].message }`));
-	}
-	
-	static registerCompleteForm(req, res, next) {
-		return ajv.validate(AuthSchema.registerComplete(), req.body) ? next() : next(new HttpError(400, `Ошибка валидации: ${ ajv.errors[0].message }`));
-	}
-	
-	static passwordRestoreInvite(req, res, next) {
-		return ajv.validate(AuthSchema.passwordRestoreInvite(), req.body) ? next() : next(new HttpError(400, `Ошибка валидации: ${ ajv.errors[0].message }`));
-	}
-	
-	static passwordRestoreComplete(req, res, next) {
-		return ajv.validate(AuthSchema.passwordRestoreComplete(), req.body) ? next() : next(new HttpError(400, `Ошибка валидации: ${ ajv.errors[0].message }`));
-	}
+
 }
 
 module.exports = AuthValidator;

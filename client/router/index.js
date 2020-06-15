@@ -1,154 +1,140 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import store from "../store";
-import el from "element-ui/src/locale/lang/el";
+import store from '../store';
+
+const withPrefix = (prefix, routes) => routes.map((route) => {
+	route.path = prefix + route.path;
+	return route;
+});
+
+const routes = [
+	{
+		path: '/',
+		redirect: '/dashboard'
+	},
+	{
+		path: '/dashboard',
+		name: 'AdminDashboard',
+		meta: {
+			layout: 'admin',
+			pageTitle: 'Rice: Информационная панель',
+			requiresAuth: true
+		},
+		component: () => import(`@/views/dashboard/AdminDashboard`)
+	},
+	{
+		path: '/auth/login',
+		name: 'AuthLogin',
+		meta: {
+			layout: 'default',
+			pageTitle: 'Rice: Аутентификация',
+			requiresGuest: true
+		},
+		component: () => import('../views/users/auth/AuthLogin')
+	},
+	...withPrefix('/users', [
+		{
+			path: '/clients',
+			name: 'ClientsList',
+			meta: {
+				layout: 'admin',
+				pageTitle: 'Rice: Список клиентов',
+				requiresAuth: true
+			},
+			component: () => import(`@/views/users/ClientsList`)
+		},
+		{
+			path: '/staff',
+			name: 'StaffList',
+			meta: {
+				layout: 'admin',
+				pageTitle: 'Rice: Список сотрудников',
+				requiresAuth: true
+			},
+			component: () => import(`@/views/users/StaffList`)
+		},
+		{
+			path: '/profile',
+			name: 'UserProfile',
+			meta: {
+				layout: 'admin',
+				pageTitle: 'Rice: Профиль пользователя',
+				requiresAuth: true
+			},
+			component: () => import('../views/users/UserProfile')
+		},
+		{
+			path: '/:serviceToken/register/complete',
+			name: 'RegisterComplete',
+			meta: {
+				layout: 'default',
+				pageTitle: 'Rice: Завершение регистрации',
+				requiresAuth: false
+			},
+			component: () => import(`@/views/users/RegisterComplete`)
+		},
+		{
+			path: '/:serviceToken/password/recovery',
+			name: 'PasswordRecovery',
+			meta: {
+				layout: 'default',
+				pageTitle: 'Rice: Восстановление пароля',
+				requiresGuest: true
+			},
+			component: () => import('../views/users/PasswordRecovery')
+		}
+	])
+];
 
 Vue.use(VueRouter);
 
-const routes = [
-  {
-    path: '/',
-    redirect: '/dashboard'
-  },
-  {
-    path: '/dashboard',
-    name: 'Dashboard',
-    component: () => import('../views/dashboard/dashboard'),
-    meta: {
-      title: 'Rice: Дашборд',
-      layout: 'admin-panel',
-      privateRoute: true
-    }
-  },
-  {
-    path: '/users',
-    name: 'UsersIndex',
-    component: () => import('../views/index/users-index'),
-    redirect: '/users/admins/list',
-    children: [
-      {
-        path: 'account',
-        name: 'UsersAccount',
-        meta: {
-          title: 'Rice: Детали пользователя',
-          layout: 'admin-panel',
-          privateRoute: true
-        },
-        component: () => import('../views/users/users-account')
-      },
-      {
-        path: 'admins/list',
-        name: 'UsersAdminsList',
-        meta: {
-          title: 'Rice: Сотрудники',
-          layout: 'admin-panel',
-          privateRoute: true
-        },
-        component: () => import('../views/users/users-admins-list')
-      },
-      {
-        path: 'client/list',
-        name: 'UsersClientsList',
-        meta: {
-          title: 'Rice: Клиенты',
-          layout: 'admin-panel',
-          privateRoute: true
-        },
-        component: () => import('../views/users/users-client-list')
-      },
-      {
-        path: 'login',
-        name: 'UsersLogin',
-        meta: {
-          title: 'Rice: Авторизация',
-          layout: 'default',
-          publicRoute: true
-        },
-        component: () => import('../views/users/users-login')
-      },
-      {
-        path: ':token/register/complete',
-        name: 'UserRegisterComplete',
-        meta: {
-          title: 'Rice: Регистрация',
-          layout: 'default',
-          publicRoute: true
-        },
-        component: () => import('../views/users/users-register-complete')
-      },
-      {
-        path: ':token/password/restore',
-        name: 'UserPasswordRestore',
-        meta: {
-          title: 'Rice: Восстановление пароля',
-          layout: 'default',
-          publicRoute: true
-        },
-        component: () => import('../views/users/users-password-restore')
-      }
-    ]
-  },
-  {
-    path: '*',
-    redirect: '/dashboard'
-  }
-];
-
-const router = new VueRouter({
-  mode: 'history',
-  routes
+const index = new VueRouter({
+	routes,
+	mode: 'history',
+	linkActiveClass: '',
+	linkExactActiveClass: 'isActive'
+	
 });
 
-router.beforeEach((to, from, next) => {
-  //устанавливаем title страницы из мета-тега маршрута.
-  //если он не указан - присваиваем дефолтное значение
-  if (to.matched.some(record => record.meta.title)) {
-    document.title = to.meta.title;
-    next();
-  }
-  
-  //privateRoute доступен только авторизированным юзерам.
-  //если не авторизирован - перенаправляем на страницу логина
-  if (to.matched.some(record => record.meta.privateRoute)) {
-    if (!store.getters['auth/isLoggedIn']) {
-      next({
-        path: '/users/login',
-        query: { redirect: to.fullPath }
-      })
-    } else {
-      next();
-    }
-  } else {
-    next();
-  }
-  
-  //publicRoute доступен только неавторизированным юзерам.
-  //если юзер авторизован - перенаправляем его обратно.
-  if (to.matched.some(record => record.meta.publicRoute)) {
-    if (store.getters['auth/isLoggedIn']) {
-      next({
-        path: from.fullPath
-      })
-    } else {
-      next();
-    }
-  } else {
-    next();
-  }
-  
-  //serviceRoute доступен только юзерам c уровнем прав доступа - супер админ.
-  //если прав доступа недостаточно - перенаправляем его обратно.
-  if (to.matched.some(record => record.meta.serviceRoute)) {
-    if (store.getters['auth/currentUser'].role === 'super') {
-      next({
-        path: from.fullPath
-      })
-    } else {
-      next();
-    }
-  } else {
-    next();
-  }
+/**
+ *  Routes options and guards
+ */
+index.beforeEach((to, from, next) => {
+	
+	// Setting pages title from route props
+	if (to.matched.some(record => record.meta.pageTitle)) {
+		document.title = to.meta.pageTitle;
+		next();
+	}
+	
+
+	// Routes guard
+	// Available only for authenticated users. if guest user -> redirect to auth page
+	if (to.matched.some(record => record.meta.requiresAuth)) {
+		if (!store.getters['auth/isLoggedIn']) {
+			next({
+				path: '/auth/login',
+				query: { redirect: to.fullPath }
+			});
+		} else {
+			next();
+		}
+	} else {
+		next();
+	}
+	
+	// Available only for guest users. if user authenticated -> redirect to prev page
+	if (to.matched.some(record => record.meta.requiresGuest)) {
+		if (store.getters['auth/isLoggedIn']) {
+			next({
+				path: from.fullPath
+			});
+		} else {
+			next();
+		}
+	} else {
+		next();
+	}
 });
 
-export default router;
+export default index;

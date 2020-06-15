@@ -2,14 +2,12 @@
 import Vue from 'vue';
 import App from './App.vue';
 
-/* Components */
+/* UI libraries and components */
 import ElementUI from 'element-ui';
-import DefaultLayout from './layouts/default-layout';
-import AdminPanelLayout from './layouts/admin-panel-layout';
 
-/* Vue layouts */
-Vue.component('default-layout', DefaultLayout);
-Vue.component('admin-panel-layout', AdminPanelLayout);
+/* Register components */
+Vue.component('AdminLayout', () => import('./layouts/admin-layout'));
+Vue.component('DefaultLayout', () => import('./layouts/default-layout'));
 
 /* Router & Store */
 import router from './router';
@@ -22,7 +20,8 @@ import AwesomeMask from 'awesome-mask';
 import locale from 'element-ui/lib/locale/lang/ru-RU'
 
 /* Styles */
-import 'element-ui/lib/theme-chalk/index.css';
+import './assets/css/theme-chalk/index.css';
+import './assets/css/theme-chalk/display.css';
 
 Vue.config.productionTip = process.env.NODE_ENV !== 'production';
 
@@ -32,7 +31,7 @@ Vue.directive('mask', AwesomeMask);
 Vue.use(ElementUI, { locale });
 
 new Vue({
-  router,
+  router: router,
   store,
   render: h => h(App)
 }).$mount('#app')

@@ -87,7 +87,7 @@ The Server can be accessed by hitting the document root:
 
 `--/components/`-- partial view components.
 
-`--/router/index.js`-- config for [Router](https://router.vuejs.org/), VueJS app router
+`--/index/index.js`-- config for [Router](https://router.vuejs.org/), VueJS app index
 
 `--/store/index.js`-- config for [Vuex](https://vuex.vuejs.org/), VueJS app store
 
@@ -99,7 +99,7 @@ The Server can be accessed by hitting the document root:
 
 `--/plugins/`-- app plugins go here.
 
-`--/App.vue`-- parent component wrapped around a router view of other components.
+`--/App.vue`-- parent component wrapped around a index view of other components.
 
 `--/main.js`-- registers the Vue components, Router and Store
 
@@ -130,6 +130,6 @@ This project will require:
 	* [dotenv](https://github.com/motdotla/dotenv) Loads our .env variables
 	* [Axios](https://github.com/axios/axios) For client side HTTP requests
 	* [Vue](https://vuejs.org/) Realtime data binding on the frontend
-	* [Vue-router](https://github.com/vuejs/vue-router) Router for the SPA 
+	* [Vue-index](https://github.com/vuejs/vue-router) Router for the SPA 
 	* [Vuex](https://vuex.vuejs.org/) Store for VueJS
 	* [Element-ui](https://element.eleme.io/) Vue.js 2.0 UI Toolkit for Web.

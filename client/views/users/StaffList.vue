@@ -222,7 +222,7 @@
                     if (valid) {
                         this.isSubmitLoading = true;
 
-                        authClient.registerInvite(this.userInviteForm)
+                        usersClient.registerInvite(this.userInviteForm)
                             .then(response => {
                                 this.adminUsersList.push({
                                     docId: response.user._id,

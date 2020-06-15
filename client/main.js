@@ -4,11 +4,10 @@ import App from './App.vue';
 
 /* UI libraries and components */
 import ElementUI from 'element-ui';
-import { AdminLayout, DefaultLayout } from './layouts';
 
 /* Register components */
-Vue.use(AdminLayout);
-Vue.use(DefaultLayout);
+Vue.component('AdminLayout', () => import('./layouts/admin-layout'));
+Vue.component('DefaultLayout', () => import('./layouts/default-layout'));
 
 /* Router & Store */
 import router from './router';

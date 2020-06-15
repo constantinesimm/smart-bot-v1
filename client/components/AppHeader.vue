@@ -47,7 +47,7 @@
                         <i class="fas fa-users fa-lg"></i> <span class="hidden-xs-only">Клиенты</span>
                     </router-link>
 
-            </div>
+                </div>
             </transition>
         </div>
 
@@ -63,29 +63,27 @@
 </template>
 
 <script>
-	export default {
-		data() {
-			return {
-				navMenuVisible: false,
+    export default {
+        data() {
+            return {
+                navMenuVisible: false,
                 userMenuVisible: false
             }
         },
         methods: {
-			handleCollapsedNav() {
-				if (this.userMenuVisible) this.handleUserMenu();
-
-				this.navMenuVisible = !this.navMenuVisible;
+            handleCollapsedNav() {
+                this.navMenuVisible = !this.navMenuVisible;
             },
-            handleUserMenu() {
-				if (this.navMenuVisible) this.handleCollapsedNav();
-
-			    this.userMenuVisible = !this.userMenuVisible;
-            },
-			logOut() {
-				this.$parent.$emit('logout')
+            logOut() {
+                this.$store.dispatch('auth/logout')
+                    .then(response => {
+                        this.$message.success(response.message);
+                        this.$router.push('/auth/login');
+                    })
+                    .catch(error => this.$message.error(error.message))
             }
         }
-	}
+    }
 </script>
 
 <style lang="scss" scoped>

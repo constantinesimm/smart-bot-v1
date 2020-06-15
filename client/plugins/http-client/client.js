@@ -42,6 +42,7 @@ const getClient = (baseUrl = null) => {
 };
 
 export { getClient };
+
 /**
  * API Clients constructor
  */

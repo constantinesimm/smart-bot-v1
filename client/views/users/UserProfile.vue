@@ -12,7 +12,7 @@
                         <el-button v-if="!this.isFormEdit"  @click="isFormEdit = !isFormEdit" type="primary" icon="far fa-edit" size="mini" plain> Изменить</el-button>
                         <el-button-group v-else>
                             <el-button @click="cancelFormEdit"  type="danger" icon="fas fa-ban" size="mini" plain><span class="hidden-sm-and-down"> Отмена</span></el-button>
-                            <el-button @click="submitForm('userAccountForm')" :loading="isSubmitLoading"  type="success" icon="far fa-save" size="mini" plain><span class="hidden-sm-and-down"> Сохранить</span></el-button>
+                            <el-button @click="submitForm('userProfileForm')" :loading="isSubmitLoading"  type="success" icon="far fa-save" size="mini" plain><span class="hidden-sm-and-down"> Сохранить</span></el-button>
                         </el-button-group>
                     </div>
                     <div class="el-card__body user-profile__form-body">
@@ -92,7 +92,7 @@
                                         <i class="far fa-calendar-alt"></i>
                                         Дата рождения
                                     </span>
-                                    <el-form-item prop="birthday" @keypress.enter.native="submitForm" style="width: 100%">
+                                    <el-form-item @keypress.enter.native="submitForm" style="width: 100%">
                                         <el-date-picker v-model="userProfileForm.birthday" :picker-options="calendarOptions" :disabled="!this.isFormEdit"
                                                         :default-value="`${new Date().getFullYear()-18}-${new Date().getMonth()+1}-${new Date().getDate()+1}`"
                                                         type="date" format="dd.MM.yyyy" placeholder="Выберите дату" size="mini" style="width: 100%">
@@ -109,9 +109,9 @@
 </template>
 
 <script>
+    import usersClient from '../../plugins/http-client/users';
     import contentFormat from '../../utils/content-format';
     import validateRules from '../../plugins/validator/rules';
-
 
 	export default {
 		name: 'UserProfile',
@@ -141,18 +141,40 @@
 		    goBack() {
 		        return this.$router.push('/')
             },
-            submitForm(form) {
-                this.$refs[form].validate(valid => {
+            submitForm() {
+                this.$refs.userProfileForm.validate(valid => {
                     if (valid) {
                         this.isSubmitLoading = true;
-                        this.userAccountForm.birthday = new Date(this.userAccountForm.birthday).toISOString();
+                        this.userProfileForm.birthday = new Date(this.userProfileForm.birthday).toISOString();
 
+                        usersClient.employeeEdit(this.$store.getters['auth/currentUser']._id, this.userProfileForm)
+                            .then(response => {
+                                console.log(response);
+                                this.isSubmitLoading = false;
+                                this.$notify.success(response.message);
+
+                                console.log('response', response)
+                                this.$store.dispatch('auth/update_user', response);
+
+                                this.userProfileForm = {
+                                    firstName: response.user.firstName,
+                                    lastName: response.user.lastName,
+                                    phoneNumber: contentFormat.phone(response.user.phoneNumber),
+                                    birthday: response.user.birthday
+                                };
+
+                                this.cancelFormEdit();
+                            })
+                            .catch(error => {
+                                this.isSubmitLoading = false;
+                                this.$notify.error(error.message);
+                            })
                     } else return false;
                 })
             },
             cancelFormEdit() {
                 this.isFormEdit = !this.isFormEdit;
-                this.$refs['userAccountForm'].resetFields();
+                this.$refs['userProfileForm'].resetFields();
             },
         }
 	}

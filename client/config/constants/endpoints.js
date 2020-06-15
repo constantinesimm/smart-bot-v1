@@ -13,7 +13,7 @@ const USERS = {
 	GET_CLIENTS: `/api/users/clients/all`,
 	REG_INVITE: `/api/users/register/invite`,
 	REG_COMPLETE: `/api/users/register/complete`,
-	PASS_RESTORE_INVITE: `/api/users/password/restore/invite`,
+	PASS_RESTORE_REQUEST: `/api/users/password/restore/invite`,
 	PASS_RESTORE_COMPLETE: `/api/users/password/restore/complete`,
 };
 

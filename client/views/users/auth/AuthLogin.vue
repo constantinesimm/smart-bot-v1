@@ -82,9 +82,11 @@
 			        inputErrorMessage: 'Некорректный формат электронной почты'
                 })
                 .then(({ value }) => this.$store.dispatch('auth/password_restore', { 'email': value }))
-                .then(response => this.$notify.success(response.message))
+                .then(response => {
+                    this.$notify.success(response.message)
+                })
                 .catch(error => {
-                	this.$notify.error(error.message);
+                	this.$notify.error(error);
                 	setTimeout(() => this.resetPasswordModal(), 2000)
                 });
             }

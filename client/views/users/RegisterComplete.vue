@@ -87,6 +87,8 @@
 </template>
 
 <script>
+    import authClient from '../../plugins/http-client/auth';
+    import usersClient from '../../plugins/http-client/users';
     import validateRules from '../../plugins/validator/rules';
 
 	export default {
@@ -103,8 +105,8 @@
 					phoneNumber: validateRules.phoneNumber,
 					secret: validateRules.secret,
 					secretConfirm: [
-						{required: true, message: 'Введите подтверждение пароля'},
-						{validator: comparePasswordsRule}
+						{ required: true, message: 'Введите подтверждение пароля' },
+						{ validator: comparePasswordsRule }
 					],
 				},
 				registerForm: {
@@ -118,17 +120,34 @@
 					secretConfirm: ''
 				},
 				isSubmitLoading: false,
-				isFormLoading: true,
-				errorMessage: ''
+				isFormLoading: true
 			}
 		},
-        created() {},
+        created() {
+            authClient.checkToken('service', { token: this.$route.params.serviceToken })
+                .then(response => {
+                    this.registerForm.email = response.user.email;
+                    this.isFormLoading = false;
+                })
+                .catch(error => {
+                    this.$message.error(error.message);
+                    this.$router.push('/users/login');
+                })
+        },
 		methods: {
 			submitForm() {
 				this.$refs.registerForm.validate(valid => {
 					if (valid) {
 						this.isSubmitLoading = true;
 
+                        usersClient.registerComplete(this.registerForm)
+                            .then(response => {
+                                this.$message.success(response.message);
+
+                                this.$router.push('/users/login');
+                            })
+                            .catch(error => this.$message.error(error.message))
+                            .finally(() => this.isSubmitLoading = false)
 					} else return false;
 				});
 			}

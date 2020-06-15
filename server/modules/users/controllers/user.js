@@ -58,7 +58,7 @@ router.post('/employee/remove/:docId', RouteGuard.isPrivate, UserValidator.emplo
 
 
 /**
- * @api {post} /api/auth/register/invite
+ * @api {post} /api/users/register/invite
  * @apiName User registration invite
  * @apiPermission auth, super
  * @apiGroup Auth
@@ -75,7 +75,7 @@ router.post('/register/invite', RouteGuard.isPrivate, UserValidator.registerInvi
 });
 
 /**
- * @api {post} /api/auth/register/complete
+ * @api {post} /api/users/register/complete
  * @apiName User registration complete
  * @apiPermission guest with services token
  * @apiGroup Auth
@@ -97,7 +97,7 @@ router.post('/register/complete', RouteGuard.isPublic, UserValidator.registerCom
 });
 
 /**
- * @api {post} /api/auth/password/restore/invite
+ * @api {post} /api/users/password/restore/invite
  * @apiName User password recovery verify
  * @apiPermission guest
  * @apiGroup Auth
@@ -106,14 +106,14 @@ router.post('/register/complete', RouteGuard.isPublic, UserValidator.registerCom
  *
  * @apiSuccess (200) {Object} success text message in object and sending mail with link
  */
-router.post('/password/restore/invite', RouteGuard.isPublic, UserValidator.passwordRestoreInvite, (req, res, next) => {
+router.post('/password/restore/invite', RouteGuard.isPublic, UserValidator.passwordRestoreRequest, (req, res, next) => {
 	UserService.passwordRestoreRequest(req.body.email)
 		.then(response => res.json({ message: response }))
 		.catch(error => next(new HttpError(error.status, error.message)));
 });
 
 /**
- * @api {post} /api/auth/password/restore/complete
+ * @api {post} /api/users/password/restore/complete
  * @apiName User registration recovery complete
  * @apiPermission guest with services token
  * @apiGroup Auth

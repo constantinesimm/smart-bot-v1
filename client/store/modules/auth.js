@@ -1,5 +1,6 @@
 import Axios from 'axios';
 import authClient from '../../plugins/http-client/auth';
+import usersClient from '../../plugins/http-client/users';
 import { AUTH, BASE_URL } from "../../config/constants/endpoints";
 
 let state = {
@@ -93,8 +94,8 @@ const actions = {
 	password_restore({ commit }, payload) {
 		return new Promise((resolve, reject) => {
 			commit('auth_request');
-			
-			authClient.passRestoreInvite(payload)
+
+			usersClient.passRestoreRequest(payload)
 				.then(data => resolve(data))
 				.catch(error => {
 					commit('auth_error');

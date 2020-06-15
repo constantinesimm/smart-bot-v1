@@ -43,13 +43,15 @@
 </template>
 
 <script>
+    import authClient from '../../plugins/http-client/auth';
+    import usersClient from '../../plugins/http-client/users';
     import validateRules from '../../plugins/validator/rules';
 
 	export default {
 		name: 'PasswordRecovery',
 		data() {
 			const comparePasswordsRule = (rule, value, callback) => {
-				return value === this.passwordRestoreForm.secret ? callback() : callback('Пароли не совпадают')
+				return value === this.passwordRecoveryForm.secret ? callback() : callback('Пароли не совпадают')
 			};
 
 			return {
@@ -69,12 +71,31 @@
 				isFormLoading: true,
 			}
 		},
+        created() {
+            authClient.checkToken('service', { token: this.$route.params.serviceToken })
+                .then(response => {
+                    this.passwordRecoveryForm.email = response.user.email;
+                    this.isFormLoading = false;
+                })
+                .catch(error => {
+                    this.$notify.error(error.message);
+                    this.$router.push('/auth/login');
+                })
+        },
 		methods: {
 			submitForm() {
 				this.$refs.passwordRecoveryForm.validate(valid => {
 					if (valid) {
 						this.isSubmitLoading = true;
 
+						usersClient.passwordRecoveryComplete(this.passwordRecoveryForm)
+                            .then(response => {
+                                this.$message.success(response.message);
+
+                                this.$router.push('/auth/login');
+                            })
+                            .catch(error => this.$message.error(error.message))
+                            .finally(() => this.isSubmitLoading = false)
 					} else return false;
 				});
 			}

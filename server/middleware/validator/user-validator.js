@@ -31,7 +31,7 @@ class UserValidator {
 		return ajv.validate(UserSchema.registerComplete(), req.body) ? next() : next(new HttpError(400, `Ошибка валидации: ${ ajv.errors[0].message }`));
 	}
 
-	static passwordRestoreInvite(req, res, next) {
+	static passwordRestoreRequest(req, res, next) {
 		return ajv.validate(UserSchema.passwordRestoreInvite(), req.body) ? next() : next(new HttpError(400, `Ошибка валидации: ${ ajv.errors[0].message }`));
 	}
 

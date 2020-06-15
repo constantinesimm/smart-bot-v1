@@ -13,6 +13,7 @@ export default {
 	},
 
 	employeeEdit(docId, data) {
+		console.log(docId, data, `${ USERS.EDIT }/${ docId }`)
 		return client.post(`${ USERS.EDIT }/${ docId }`, data)
 			.then(response => Promise.resolve(response.data))
 			.catch(error => Promise.reject(error.response.data));
@@ -25,25 +26,25 @@ export default {
 	},
 
 	registerInvite(data) {
-		return client.post(AUTH.REG_INVITE, data)
+		return client.post(USERS.REG_INVITE, data)
 			.then(response => Promise.resolve(response.data))
 			.catch(error => Promise.reject(error.response.data));
 	},
 
 	registerComplete(data) {
-		return client.post(AUTH.REG_COMPLETE, data)
+		return client.post(USERS.REG_COMPLETE, data)
 			.then(response => Promise.resolve(response.data))
 			.catch(error => Promise.reject(error.response.data));
 	},
 
-	passRestoreInvite(data) {
-		return client.post(AUTH.PASS_RESTORE_INVITE, data)
+	passRestoreRequest(data) {
+		return client.post(USERS.PASS_RESTORE_REQUEST, data)
 			.then(response => Promise.resolve(response.data))
 			.catch(error => Promise.reject(error.response.data));
 	},
 
-	passwordRestoreComplete(data) {
-		return client.post(AUTH.PASS_RESTORE_COMPLETE, data)
+	passwordRecoveryComplete(data) {
+		return client.post(USERS.PASS_RESTORE_COMPLETE, data)
 			.then(response => Promise.resolve(response.data))
 			.catch(error => Promise.reject(error.response.data));
 	}

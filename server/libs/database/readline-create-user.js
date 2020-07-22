@@ -1,4 +1,4 @@
-let str = `mongodb+srv://mb_admin:S0OXCXSqNZKbFMfe@cv-zj4vp.mongodb.net/messager_bots?retryWrites=true&w=majority`
+let str = `mongodb+srv://mb_admin:<pass>@cv-zj4vp.mongodb.net/messager_bots?retryWrites=true&w=majority`
 const AuthService = require('../../modules/users/services/auth');
 const mongoose = require('mongoose');
 const readline = require('readline');

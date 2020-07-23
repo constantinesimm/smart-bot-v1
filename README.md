@@ -1,4 +1,4 @@
-# [**R**ice](https://rice-food.com.ua/) Smart Bot Web Application
+# Web Application – Admin Panel for Telegram bot
 
 This project build using [**M**ongoDB](https://www.mongodb.com/) [**E**xpressJS](https://expressjs.com/) [**V**ueJS](https://vuejs.org/) [**N**odeJS](https://nodejs.org/en/) stack, with SPA rendered on the client side.
 

@@ -29,87 +29,15 @@ router.post('/authenticate', RouteGuard.isPublic, AuthValidator.loginForm, (req,
 });
 
 /**
- * @api {post} /api/auth/register/invite
- * @apiName User registration invite
- * @apiPermission admin, super
- * @apiGroup Auth
- *
- * @apiParam {String} [email] Email
- * @apiParam {String} [role] Role
- *
- * @apiSuccess (200) {Object} success text message in object
- */
-router.post('/register/invite', RouteGuard.isPrivate, AuthValidator.registerInviteForm, (req, res, next) => {
-	AuthService.registerRequest(req.body)
-		.then(data => res.json(data))
-		.catch(error => next(new HttpError(error.status, error.message)));
-});
-
-/**
- * @api {post} /api/auth/register/complete
- * @apiName User registration complete
- * @apiPermission guest with service token
- * @apiGroup Auth
- *
- * @apiParam {Number} [userId] User ID
- * @apiParam {String} [email] Email
- * @apiParam {String} [secret] Password
- * @apiParam {String} [firstName] Firstname
- * @apiParam {String} [lastName] Lastname
- * @apiParam {String} [gender] Gender
- * @apiParam {String} [phoneNumber] Phone Number
- *
- * @apiSuccess (200) {Object} success text message in object
- */
-router.post('/register/complete', RouteGuard.isPublic, AuthValidator.registerCompleteForm, (req, res, next) => {
-	AuthService.registerComplete(req.body)
-		.then(data => res.json(data))
-		.catch(error => next(new HttpError(error.status, error.message)));
-});
-
-/**
- * @api {post} /api/auth/password/restore/invite
- * @apiName User password recovery verify
- * @apiPermission guest
- * @apiGroup Auth
- *
- * @apiParam {String} [email] Email
- *
- * @apiSuccess (200) {Object} success text message in object and sending mail with link
- */
-router.post('/password/restore/invite', RouteGuard.isPublic, AuthValidator.passwordRestoreInvite, (req, res, next) => {
-	AuthService.passwordRestoreRequest(req.body.email)
-		.then(response => res.json({ message: response }))
-		.catch(error => next(new HttpError(error.status, error.message)));
-});
-
-/**
- * @api {post} /api/auth/password/restore/complete
- * @apiName User registration recovery complete
- * @apiPermission guest with service token
- * @apiGroup Auth
- *
- * @apiParam {String} [email] Email
- * @apiParam {String} [secret] Password
- *
- * @apiSuccess (200) {Object} success text message in object
- */
-router.post('/password/restore/complete', RouteGuard.isPublic, AuthValidator.passwordRestoreComplete, (req, res, next) => {
-	AuthService.passwordRestoreComplete(req.body)
-		.then(response => res.json({ message: response }))
-		.catch(error => next(new HttpError(error.status, error.message)));
-});
-
-/**
  * @api {post} /api/auth/check/token/:type
- * @apiName Verify access or service token
+ * @apiName Verify access or services token
  * @apiPermission all
  * @apiGroup Auth
  *
  * @apiParam {String} [token] JsonWebToken
  * @apiParam {String} [type] Type of token
  *
- * @apiSuccess (200) {Object} mixed `User` public data for service token type
+ * @apiSuccess (200) {Object} mixed `User` public data for services token type
  * @apiSuccess (200) Promise resolve for access token type
  */
 router.post('/check/token/:type', RouteGuard.isPublic, AuthValidator.checkToken, (req, res, next) => {
@@ -129,7 +57,7 @@ router.post('/check/token/:type', RouteGuard.isPublic, AuthValidator.checkToken,
  */
 router.post('/logout', RouteGuard.isPrivate, AuthValidator.logout, (req, res, next) => {
 	AuthService.verifyToken('access', req.headers.authorization)
-		.then(response => AuthService.signOutRequest(response._id))
+		.then(response => response._id ? AuthService.signOutRequest(response._id) : next(new HttpError(401, 'Некорректные данные токена')))
 		.then(data => res.json(data))
 		.catch(error => next(new HttpError(error.status, error.message)));
 });

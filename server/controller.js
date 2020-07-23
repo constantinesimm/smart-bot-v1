@@ -16,13 +16,13 @@ module.exports = app => {
 	app.use('/api/auth', routes.auth);
 	app.use('/api/users', routes.users);
 	
-	/* static path */
+	/* static path and file */
 	app.use(express.static(path.join(__dirname, '../dist')));
 	app.get('*', (req, res) => {
 		fs.stat(filePath,(error, stats) => {
 			res.set({ 'Content-Type': 'text/html; charset=utf-8', 'Content-Length': stats.size })
 		});
 		
-		return fs.createReadStream(filePath).pipe(res);
+		fs.createReadStream(filePath).pipe(res);
 	});
 };

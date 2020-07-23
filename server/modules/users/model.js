@@ -6,6 +6,7 @@ const UserSchema = new Schema({
 	email: {
 		type: String,
 		trim: true,
+		required: true,
 		set: v => v.toLowerCase()
 	},
 	firstName: String,
@@ -15,10 +16,14 @@ const UserSchema = new Schema({
 		type: String,
 		set: v => v.replace(/[+\s()]/g, '')
 	},
-	birthday: Date,
+	birthday: {
+		type: Date,
+		default: null
+	},
 	role: {
 		type: String,
-		enum: ['manager', 'admin', 'super']
+		enum: ['manager', 'admin', 'super'],
+		default: 'manager'
 	},
 	hash : {
 		type: String,

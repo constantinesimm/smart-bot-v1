@@ -1,7 +1,7 @@
 import Axios from 'axios';
-import router from "../../router";
 import authClient from '../../plugins/http-client/auth';
-import {AUTH, BASE_URL} from "../../config/constants/endpoints";
+import usersClient from '../../plugins/http-client/users';
+import { AUTH, BASE_URL } from "../../config/constants/endpoints";
 
 let state = {
 	status: '',
@@ -37,6 +37,11 @@ const mutations = {
 		state.token = '';
 		state.user = '';
 	},
+	err_logout(state) {
+		state.status = 'error';
+		state.token = '';
+		state.user = '';
+	},
 };
 const actions = {
 	login({ commit }, payload) {
@@ -54,20 +59,6 @@ const actions = {
 					
 					return reject(error);
 				});
-			
-			/*
-			Axios.post(AUTH.LOGIN, payload)
-				.then(response => {
-					commit('auth_success', response.data);
-					
-					return resolve(response.data);
-				})
-				.catch(error => {
-					commit('auth_error');
-					
-					return reject(error.response.data);
-				});
-			 */
 		});
 	},
 	logout({ commit }) {
@@ -87,12 +78,14 @@ const actions = {
 				})
 		});
 	},
+
 	err_logout({ commit }, payload) {
-		commit('logout');
-		setTimeout(() => router.push('/users/login'), 1000);
+		commit('err_logout');
+		setTimeout(() => window.location.replace('/auth/login'), 1000);
 		
 		return payload;
 	},
+
 	update_user({ commit }, payload) {
 		commit('user_update', payload);
 		
@@ -101,8 +94,8 @@ const actions = {
 	password_restore({ commit }, payload) {
 		return new Promise((resolve, reject) => {
 			commit('auth_request');
-			
-			authClient.passRestoreInvite(payload)
+
+			usersClient.passRestoreRequest(payload)
 				.then(data => resolve(data))
 				.catch(error => {
 					commit('auth_error');

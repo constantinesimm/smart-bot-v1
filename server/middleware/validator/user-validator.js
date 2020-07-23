@@ -22,6 +22,22 @@ class UserValidator {
 		
 		return validate ? next() : next(new HttpError(400, filteredErrors[0].message));
 	}
+
+	static registerInviteForm(req, res, next) {
+		return ajv.validate(UserSchema.registerInvite(), req.body) ? next() : next(new HttpError(400, `Ошибка валидации: ${ ajv.errors[0].message }`));
+	}
+
+	static registerCompleteForm(req, res, next) {
+		return ajv.validate(UserSchema.registerComplete(), req.body) ? next() : next(new HttpError(400, `Ошибка валидации: ${ ajv.errors[0].message }`));
+	}
+
+	static passwordRestoreRequest(req, res, next) {
+		return ajv.validate(UserSchema.passwordRestoreInvite(), req.body) ? next() : next(new HttpError(400, `Ошибка валидации: ${ ajv.errors[0].message }`));
+	}
+
+	static passwordRestoreComplete(req, res, next) {
+		return ajv.validate(UserSchema.passwordRestoreComplete(), req.body) ? next() : next(new HttpError(400, `Ошибка валидации: ${ ajv.errors[0].message }`));
+	}
 }
 
 module.exports = UserValidator;
